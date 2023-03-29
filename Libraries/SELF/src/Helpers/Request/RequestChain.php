@@ -1,6 +1,6 @@
 <?php
+namespace SELF\src\Helpers\Request;
 
-namespace Helpers\Request;
 class RequestChain
 {
 

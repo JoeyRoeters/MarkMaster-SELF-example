@@ -1,6 +1,6 @@
 <?php
 
-namespace Templating;
+namespace SELF\src\Templating;
 
 class Render
 {

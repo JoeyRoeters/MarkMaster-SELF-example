@@ -1,6 +1,7 @@
 <?php
 
-namespace Templating;
+namespace SELF\src\Templating;
+
 class RenderEngine
 {
 

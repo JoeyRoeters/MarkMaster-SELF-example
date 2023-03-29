@@ -1,6 +1,6 @@
 <?php
 
-namespace Middleware;
+namespace SELF\src\Http\Middleware;
 
 class Middleware
 {

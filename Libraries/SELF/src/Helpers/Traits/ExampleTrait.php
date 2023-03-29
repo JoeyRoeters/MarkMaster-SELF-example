@@ -1,6 +1,6 @@
 <?php
 
-namespace Helpers\Traits;
+namespace SELF\src\Helpers\Traits;
 
 trait ExampleTrait
 {

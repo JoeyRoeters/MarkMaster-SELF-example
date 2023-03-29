@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace SELF\src\Database;
 
 class Database
 {
