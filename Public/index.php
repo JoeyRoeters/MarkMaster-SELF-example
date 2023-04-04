@@ -1,12 +1,11 @@
 <?php
 
 require __DIR__ . '/../autoload.php';
+require __DIR__ . '/../helpers.php';
 
 session_start();
-$class = new \App\Domains\User\Controllers\Overview();
 
 $app = new \SELF\src\Application();
-
 $router = new \SELF\src\Http\Router();
 
 $app->set(Kernel::class, fn () => new \SELF\src\Http\Kernel($app, $router));
