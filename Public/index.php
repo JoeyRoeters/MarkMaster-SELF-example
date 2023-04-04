@@ -1,13 +1,21 @@
 <?php
 
+use App\Kernel;
+use SELF\src\Application;
+use SELF\src\Http\Router;
+use SELF\src\Http\ServerRequest;
+
 require __DIR__ . '/../autoload.php';
 require __DIR__ . '/../helpers.php';
 
 session_start();
 
-$app = new \SELF\src\Application();
-$router = new \SELF\src\Http\Router();
+$app = new Application();
+$router = new Router();
 
-$app->set(Kernel::class, fn () => new \SELF\src\Http\Kernel($app, $router));
+$app->set(Kernel::class, fn () => new Kernel($app, $router));
 
-$request = \SELF\src\Http\ServerRequest::fromGlobals();
+$request = ServerRequest::fromGlobals();
+$kernel = $app->get(Kernel::class);
+
+$kernel->handleRequest($request);
