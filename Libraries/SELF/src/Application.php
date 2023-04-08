@@ -1,7 +1,7 @@
 <?php
 namespace SELF\src;
 
-use SELF\src\Database\Database;
+use SELF\src\HelixORM\Helix;
 
 class Application extends Container
 {
@@ -12,6 +12,6 @@ class Application extends Container
 
     private function registerServices(): void
     {
-        $this->set(Database::class, fn () => Database::getInstance());
+        $this->set(Helix::class, fn () => Helix::getInstance());
     }
 }

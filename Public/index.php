@@ -13,6 +13,8 @@ session_start();
 $app = new Application();
 $router = new Router();
 
+sdd(new \App\Domains\User\Controllers\Overview());
+
 $app->set(Kernel::class, fn () => new Kernel($app, $router));
 
 $request = ServerRequest::fromGlobals();
