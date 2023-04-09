@@ -56,6 +56,11 @@ abstract class AbstractQuery
      */
     public function __call(string $name, array $arguments)
     {
+        // check if method is overriden in child class
+        if (method_exists($this, $name)) {
+            return $this->{$name}(...$arguments);
+        }
+        
         // loop over magic methods
         switch (DatabaseMagicFunctionsEnum::identify($name)) {
             case DatabaseMagicFunctionsEnum::FILTER:
