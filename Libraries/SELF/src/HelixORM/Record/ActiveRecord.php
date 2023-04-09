@@ -2,6 +2,8 @@
 
 namespace SELF\src\HelixORM\Record;
 
+use Cassandra\Date;
+use DateTime;
 use SELF\src\Exceptions\HelixORM\HelixException;
 use SELF\src\Exceptions\HelixORM\InvalidMethodException;
 use SELF\src\Exceptions\HelixORM\QueryBuilderException;
@@ -214,6 +216,10 @@ abstract class ActiveRecord implements ActiveRecordInterface
     {
         if (!$this->preSave()) {
             return false;
+        }
+
+        if ($this->columnExists('updated_at')) {
+            $this->updated_at = new DateTime();
         }
 
         // create query builder
