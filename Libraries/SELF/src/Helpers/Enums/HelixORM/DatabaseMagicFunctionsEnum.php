@@ -13,6 +13,9 @@ enum DatabaseMagicFunctionsEnum: string
 {
     case FILTER = 'filter';
     case ORDER = 'order';
+    case GET = 'get';
+    case SET = 'set';
+
 
     /**
      * Identify the type of magic function
@@ -31,6 +34,14 @@ enum DatabaseMagicFunctionsEnum: string
 
         if (strpos($name,self::ORDER->value) === 0) {
             return self::ORDER;
+        }
+
+        if (strpos($name,self::GET->value) === 0) {
+            return self::GET;
+        }
+
+        if (strpos($name,self::SET->value) === 0) {
+            return self::SET;
         }
 
         return null;
@@ -52,6 +63,11 @@ enum DatabaseMagicFunctionsEnum: string
             case self::ORDER:
                 // remove filterBy from name
                 $name = substr($name, strlen($type->value) + 2);
+
+                break;
+            case self::GET:
+            case self::SET:
+                $name = substr($name, strlen($type->value));
 
                 break;
             default:

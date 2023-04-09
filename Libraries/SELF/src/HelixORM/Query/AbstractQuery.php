@@ -14,10 +14,10 @@ use SELF\src\HelixORM\Query\Criteria\LimitCriteria;
 use SELF\src\HelixORM\Query\Criteria\OrCriteria;
 use SELF\src\HelixORM\Query\Criteria\OrderCriteria;
 use SELF\src\HelixORM\Query\Criteria\QueryCriteria;
-use SELF\src\HelixORM\QueryBuilder;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 use SELF\src\Helpers\Enums\HelixORM\DatabaseMagicFunctionsEnum;
+use SELF\src\Helpers\Enums\HelixORM\QueryType;
 use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\CriteriaInterface;
 use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\OperatorCriteriaInterface;
 use SELF\src\Helpers\Interfaces\Database\HelixORM\Record\ActiveRecordInterface;
@@ -85,6 +85,12 @@ abstract class AbstractQuery
         }
     }
 
+    private function getColumn(string $columnName): TableColumn
+    {
+        $reflection = $this->getModelReflection();
+        return $reflection->getMethod('getColumn')->invoke($reflection->newInstance(), $columnName);
+    }
+
     /**
      * apply filters to query
      *
@@ -96,7 +102,7 @@ abstract class AbstractQuery
      */
     public function filterBy(string $columnName, Criteria $comperision, $value): static
     {
-        $this->queryCriterias[] = new FilterCriteria($columnName, $comperision, $value);
+        $this->addCriteria(new FilterCriteria($this->getColumn($columnName), $comperision, $value));
 
         return $this;
     }
@@ -110,7 +116,7 @@ abstract class AbstractQuery
      */
     public function orderBy(string $columnName, Criteria $order = Criteria::ASC): static
     {
-        $this->addCriteria(new OrderCriteria($columnName, $order));
+        $this->addCriteria(new OrderCriteria($this->getColumn($columnName), $order));
 
         return $this;
     }
@@ -242,11 +248,14 @@ abstract class AbstractQuery
      */
     private function getQueryBuilder(): QueryBuilder
     {
-        $reflection = $this->getModelReflection();
-        return new QueryBuilder(
-            $this->getQueryCriterias(),
-            $reflection->getProperty('table')->getValue($reflection->newInstanceWithoutConstructor())
+        $builder = new QueryBuilder(
+            QueryType::SELECT,
+            $this->getModel()
         );
+
+        $builder->setCriterias($this->getQueryCriterias());
+
+        return $builder;
     }
 
     /**
@@ -259,16 +268,8 @@ abstract class AbstractQuery
     {
         $helix = Helix::getInstance();
         $builder = $this->getQueryBuilder();
-        $reflection = $this->getModelReflection();
         $statement = $helix->prepare($builder->getSql());
-
-        $filters = $builder->getFilters();
-        foreach ($filters as $filter) {
-            /** @var TableColumn $column */
-            $column = $reflection->getMethod('getColumn')->invoke($reflection->newInstance(), $filter->getColumn());
-
-            $filter->bindValue($statement, $column);
-        }
+        $builder->prepareStatement($statement);
 
         return $statement;
     }
@@ -291,6 +292,7 @@ abstract class AbstractQuery
             /** @var ActiveRecordInterface $model */
             $model = $this->getModelReflection()->newInstance();
             $model->fromArray($row);
+            $model->setIsNew(false);
 
             $collection->add($model);
         }
@@ -298,6 +300,23 @@ abstract class AbstractQuery
         $this->resetCriterias();
 
         return $collection;
+    }
+
+    /**
+     * find record by primary key
+     *
+     * @param $pk
+     * @return ActiveRecordInterface|null
+     * @throws ReflectionException
+     */
+    public function findPk($pk): ?ActiveRecordInterface
+    {
+        /** @var TableColumn $primaryKey */
+        $primaryKey = $this->getModelReflection()->getMethod('getPrimaryKey')->invoke($this->getModelReflection()->newInstance());
+
+        $this->filterBy($primaryKey->getName(), Criteria::EQUALS, $pk);
+
+        return $this->findOne();
     }
 
     /**

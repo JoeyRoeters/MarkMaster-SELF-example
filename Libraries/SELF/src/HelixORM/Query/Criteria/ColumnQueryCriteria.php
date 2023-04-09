@@ -2,6 +2,7 @@
 
 namespace SELF\src\HelixORM\Query\Criteria;
 
+use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\ColumnCriteriaInterface;
 
@@ -12,7 +13,7 @@ use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\ColumnCriteriaInterface;
 abstract class ColumnQueryCriteria extends QueryCriteria implements ColumnCriteriaInterface
 {
     public function __construct(
-        private string   $column,
+        private TableColumn $tableColumn,
         private Criteria $comperision = Criteria::EQUALS,
     ) {
     }
@@ -28,9 +29,9 @@ abstract class ColumnQueryCriteria extends QueryCriteria implements ColumnCriter
     /**
      * @inheritDoc
      */
-    public function getColumn(): string
+    public function getTableColumn(): TableColumn
     {
-        return $this->column;
+        return $this->tableColumn;
     }
 
     /**
@@ -38,6 +39,6 @@ abstract class ColumnQueryCriteria extends QueryCriteria implements ColumnCriter
      */
     public function criteriaIdentifier(): string
     {
-        return static::class . $this->getColumn();
+        return static::class . $this->getTableColumn()->getName();
     }
 }

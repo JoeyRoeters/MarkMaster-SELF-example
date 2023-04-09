@@ -2,19 +2,19 @@
 
 namespace SELF\src\HelixORM\Query\Criteria;
 
+use SELF\src\HelixORM\Query\QueryBuilder;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
+use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\BindableColumnInterface;
 
 /**
  * Class OrderCriteria
  * @package SELF\src\HelixORM\Query\Criteria
  */
-class FilterCriteria extends ColumnQueryCriteria
+class FilterCriteria extends ColumnQueryCriteria implements BindableColumnInterface
 {
-    private static int $countBinds = 1;
-
     public function __construct(
-        string $column,
+        TableColumn $column,
         Criteria $comperison,
         private mixed $value
     )
@@ -39,7 +39,7 @@ class FilterCriteria extends ColumnQueryCriteria
      */
     public function getSql(): string
     {
-        $sql = $this->getColumn() . ' ' . $this->getComperision()->value . ' ';
+        $sql = $this->getTableColumn()->getName() . ' ' . $this->getComperision()->value . ' ';
         $criteria = $this->getComperision();
 
         if ($criteria->isIn()) {
@@ -59,19 +59,19 @@ class FilterCriteria extends ColumnQueryCriteria
         return $sql;
     }
 
-    public function bindValue(\PDOStatement &$statement, TableColumn $column): void
+    public function bindValue(\PDOStatement &$statement): void
     {
         $value = $this->getValue();
         if ($this->getComperision()->isIn()) {
             if (is_array($value)) {
                 foreach ($value as $seperateValue) {
-                    $statement->bindValue(self::$countBinds++, $seperateValue, $column->getType()->getPdoType());
+                    $statement->bindValue(QueryBuilder::$countBinds++, $seperateValue, $this->getTableColumn()->getType()->getPdoType());
                 }
 
                 return;
             }
         }
 
-        $statement->bindValue(self::$countBinds++, $value, $column->getType()->getPdoType());
+        $statement->bindValue(QueryBuilder::$countBinds++, $value, $this->getTableColumn()->getType()->getPdoType());
     }
 }

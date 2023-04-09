@@ -3,15 +3,24 @@ namespace App\Domains\User\Controllers;
 
 use App\Domains\User\Repository\User;
 use App\Domains\User\Repository\UserQuery;
-use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 class Overview
 {
     public function __construct()
     {
-        $query = UserQuery::create();
-//        $query->filterById([1, 2, 3], Criteria::NOT_IN);
+        $user = UserQuery::create()->findPk(1);
+        $user->setName('test');
+        $user->save();
 
-        s_dump($query->find());
+        s_dump($user);
+
+        $user = new User();
+        $user->setName('appel');
+        $user->save();
+
+        s_dump($user);
+
+        $user->delete();
+//        s_dump($user);
     }
 }

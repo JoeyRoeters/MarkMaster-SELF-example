@@ -2,6 +2,7 @@
 
 namespace SELF\src\HelixORM\Query\Criteria;
 
+use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
@@ -11,7 +12,7 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
 class OrderCriteria extends ColumnQueryCriteria
 {
     public function __construct(
-        string $column,
+        TableColumn $column,
         Criteria $sort = Criteria::ASC,
     ) {
         parent::__construct($column, $sort);
@@ -22,6 +23,6 @@ class OrderCriteria extends ColumnQueryCriteria
      */
     public function getSql(): string
     {
-        return $this->getColumn() . ' ' . $this->getComperision()->value;
+        return $this->getTableColumn()->getName() . ' ' . $this->getComperision()->value;
     }
 }
