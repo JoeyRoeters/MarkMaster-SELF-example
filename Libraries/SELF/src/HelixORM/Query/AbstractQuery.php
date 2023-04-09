@@ -3,6 +3,7 @@
 namespace SELF\src\HelixORM\Query;
 
 
+use PDO;
 use ReflectionException;
 use SELF\src\Exceptions\HelixORM\InvalidMethodException;
 use SELF\src\HelixORM\Helix;
@@ -14,7 +15,7 @@ use SELF\src\HelixORM\Query\Criteria\OrCriteria;
 use SELF\src\HelixORM\Query\Criteria\OrderCriteria;
 use SELF\src\HelixORM\Query\Criteria\QueryCriteria;
 use SELF\src\HelixORM\QueryBuilder;
-use SELF\src\HelixORM\SqlColumn;
+use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 use SELF\src\Helpers\Enums\HelixORM\DatabaseMagicFunctionsEnum;
 use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\CriteriaInterface;
@@ -259,14 +260,14 @@ abstract class AbstractQuery
         $helix = Helix::getInstance();
         $builder = $this->getQueryBuilder();
         $reflection = $this->getModelReflection();
-
         $statement = $helix->prepare($builder->getSql());
 
-        $values = $builder->getFilterValues();
-        foreach ($values as $key => $value) {
-            /** @var SqlColumn $column */
-            $column = $reflection->getMethod('getColumn')->invoke($reflection->newInstance(), $key);
-            $statement->bindParam($column->getColumnParam() , $value, $column->getType());
+        $filters = $builder->getFilters();
+        foreach ($filters as $filter) {
+            /** @var TableColumn $column */
+            $column = $reflection->getMethod('getColumn')->invoke($reflection->newInstance(), $filter->getColumn());
+
+            $filter->bindValue($statement, $column);
         }
 
         return $statement;
@@ -285,8 +286,9 @@ abstract class AbstractQuery
 
         $collection = new HelixObjectCollection();
 
-        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $row) {
+            /** @var ActiveRecordInterface $model */
             $model = $this->getModelReflection()->newInstance();
             $model->fromArray($row);
 

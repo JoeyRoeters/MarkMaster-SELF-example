@@ -29,27 +29,27 @@ enum Criteria: string
 
     public function isNull(): bool
     {
-        return $this->value === self::IS_NULL || $this->value === self::IS_NOT_NULL;
+        return $this === self::IS_NULL || $this === self::IS_NOT_NULL;
     }
 
     public function isBetween(): bool
     {
-        return $this->value === self::BETWEEN || $this->value === self::NOT_BETWEEN;
+        return $this === self::BETWEEN || $this === self::NOT_BETWEEN;
     }
 
     public function isIn(): bool
     {
-        return $this->value === self::IN || $this->value === self::NOT_IN;
+        return $this === self::IN || $this === self::NOT_IN;
     }
 
     public function isLike(): bool
     {
-        return $this->value === self::LIKE || $this->value === self::NOT_LIKE;
+        return $this === self::LIKE || $this === self::NOT_LIKE;
     }
 
     public function isOrder(): bool
     {
-        return $this->value === self::DESC || $this->value === self::ASC;
+        return $this === self::DESC || $this === self::ASC;
     }
 
     public function isFilter(): bool

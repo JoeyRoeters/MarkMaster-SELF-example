@@ -22,6 +22,6 @@ class OrderCriteria extends ColumnQueryCriteria
      */
     public function getSql(): string
     {
-        return $this->getColumn() . ' ' . $this->getCriteria()->value;
+        return $this->getColumn() . ' ' . $this->getComperision()->value;
     }
 }

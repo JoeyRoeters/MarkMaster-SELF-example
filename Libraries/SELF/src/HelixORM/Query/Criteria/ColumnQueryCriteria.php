@@ -12,17 +12,17 @@ use SELF\src\Helpers\Interfaces\Database\HelixORM\Query\ColumnCriteriaInterface;
 abstract class ColumnQueryCriteria extends QueryCriteria implements ColumnCriteriaInterface
 {
     public function __construct(
-        private string $column,
-        private Criteria $criteria = Criteria::EQUALS,
+        private string   $column,
+        private Criteria $comperision = Criteria::EQUALS,
     ) {
     }
 
     /**
      * @inheritDoc
      */
-    public function getCriteria(): Criteria
+    public function getComperision(): Criteria
     {
-        return $this->criteria;
+        return $this->comperision;
     }
 
     /**

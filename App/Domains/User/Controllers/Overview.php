@@ -10,9 +10,7 @@ class Overview
     public function __construct()
     {
         $query = UserQuery::create();
-        $query->filterById(1);
-        $query->orderByEmail(Criteria::DESC);
-        $query->limit(1);
+//        $query->filterById([1, 2, 3], Criteria::NOT_IN);
 
         s_dump($query->find());
     }

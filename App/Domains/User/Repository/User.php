@@ -2,7 +2,8 @@
 namespace App\Domains\User\Repository;
 
 use SELF\src\HelixORM\Record\ActiveRecord;
-use SELF\src\HelixORM\SqlColumn;
+use SELF\src\HelixORM\TableColumn;
+use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 
 class User extends ActiveRecord
 {
@@ -11,12 +12,12 @@ class User extends ActiveRecord
     public function tableColumns(): array
     {
         return [
-            SqlColumn::create('id', \PDO::PARAM_INT, false),
-            SqlColumn::create('name'),
-            SqlColumn::create('email'),
-            SqlColumn::create('password'),
-            SqlColumn::create('created_at'),
-            SqlColumn::create('updated_at'),
+            TableColumn::create('id', ColumnType::INT, false),
+            TableColumn::create('name'),
+            TableColumn::create('email'),
+            TableColumn::create('password'),
+            TableColumn::create('created_at', ColumnType::DATETIME),
+            TableColumn::create('updated_at', ColumnType::DATETIME),
         ];
     }
 }

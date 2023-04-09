@@ -12,8 +12,8 @@ class QueryBuilder
 {
     private string $sql = "";
 
-    /** @var array<int, mixed> */
-    private array $filterValues = [];
+    /** @var FilterCriteria[] */
+    private array $filters = [];
 
     public function __construct(
         private array $criteria,
@@ -71,7 +71,7 @@ class QueryBuilder
 
                 // if we have a filter criteria, we need to add the value to the filter inserts
                 if ($criteria instanceof FilterCriteria) {
-                    $this->filterValues[$criteria->getColumn()] = $criteria->getValue();
+                    $this->filters[] = $criteria;
                 }
 
                 $count++;
@@ -131,10 +131,10 @@ class QueryBuilder
     /**
      * returns the values for the filter criteria in the order they were added
      *
-     * @return array
+     * @return FilterCriteria[]
      */
-    public function getFilterValues(): array
+    public function getFilters(): array
     {
-        return $this->filterValues;
+        return $this->filters;
     }
 }

@@ -3,7 +3,7 @@
 namespace SELF\src\HelixORM\Record;
 
 use SELF\src\Exceptions\HelixORM\TableColumnNotFound;
-use SELF\src\HelixORM\SqlColumn;
+use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Interfaces\Database\HelixORM\Record\ActiveRecordInterface;
 
 abstract class ActiveRecord implements ActiveRecordInterface
@@ -12,7 +12,7 @@ abstract class ActiveRecord implements ActiveRecordInterface
 
     private array $data = [];
 
-    /** @var SqlColumn[] */
+    /** @var TableColumn[] */
     private array $columns = [];
 
     abstract protected function tableColumns(): array;
@@ -46,16 +46,16 @@ abstract class ActiveRecord implements ActiveRecordInterface
      */
     protected function columnExists(string $column): bool
     {
-        $columns = array_map(function (SqlColumn $column) {
+        $columns = array_map(function (TableColumn $column) {
             return $column->getName();
         }, $this->columns);
 
         return in_array($column, $columns);
     }
 
-    protected function getColumn(string $columnName): SqlColumn
+    protected function getColumn(string $columnName): TableColumn
     {
-        $columns = array_filter($this->columns, function (SqlColumn $column) use ($columnName) {
+        $columns = array_filter($this->columns, function (TableColumn $column) use ($columnName) {
             return $column->getName() === $columnName;
         });
 
@@ -70,7 +70,9 @@ abstract class ActiveRecord implements ActiveRecordInterface
     {
         foreach ($data as $key => $value) {
             if ($this->columnExists($key)) {
-                $this->{$key} = $value;
+                $column = $this->getColumn($key);
+
+                $this->{$key} = $column->getType()->cast($value);
             }
         }
 

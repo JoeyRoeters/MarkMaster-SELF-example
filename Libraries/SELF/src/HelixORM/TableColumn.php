@@ -2,19 +2,21 @@
 
 namespace SELF\src\HelixORM;
 
-class SqlColumn
+use SELF\src\Helpers\Enums\HelixORM\ColumnType;
+
+class TableColumn
 {
     private string $relation;
 
     public function __construct(
         private string $name,
-        private int $type,
+        private ColumnType $type,
         private bool $nullable = true,
     )
     {
     }
 
-    public static function create(string $name, int $type = \PDO::PARAM_STR, bool $nullable = true, ): self
+    public static function create(string $name, ColumnType $type = ColumnType::STRING, bool $nullable = true): self
     {
         return new static($name, $type, $nullable);
     }
@@ -24,7 +26,7 @@ class SqlColumn
         return $this->name;
     }
 
-    public function getType(): string
+    public function getType(): ColumnType
     {
         return $this->type;
     }

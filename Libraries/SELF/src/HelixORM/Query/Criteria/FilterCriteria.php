@@ -2,6 +2,7 @@
 
 namespace SELF\src\HelixORM\Query\Criteria;
 
+use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
@@ -10,6 +11,8 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
  */
 class FilterCriteria extends ColumnQueryCriteria
 {
+    private static int $countBinds = 1;
+
     public function __construct(
         string $column,
         Criteria $comperison,
@@ -24,17 +27,11 @@ class FilterCriteria extends ColumnQueryCriteria
      */
     public function getValue(): mixed
     {
-        return $this->value;
-    }
+        if ($this->getComperision()->isLike()) {
+            return '%' . $this->value . '%';
+        }
 
-    /**
-     * get the parameter name for the column for binding
-     *
-     * @return string
-     */
-    public function getColumnParam(): string
-    {
-        return $this->getColumn() . '_param';
+        return $this->value;
     }
 
     /**
@@ -42,16 +39,39 @@ class FilterCriteria extends ColumnQueryCriteria
      */
     public function getSql(): string
     {
-        $sql = $this->getColumn() . ' ' . $this->getCriteria()->value . ' ';
-        $criteria = $this->getCriteria();
-        if ($criteria->isLike()) {
-            $sql .= "%:{$this->getColumnParam()}%";
-        } elseif ($criteria->isIn()) {
-            $sql .= "(:{$this->getColumnParam()})";
+        $sql = $this->getColumn() . ' ' . $this->getComperision()->value . ' ';
+        $criteria = $this->getComperision();
+
+        if ($criteria->isIn()) {
+            $sql .= "(";
+            if (is_array($this->getValue())) {
+                $sql .= str_repeat("?,", count($this->getValue()));
+                $sql = rtrim($sql, ',');
+            } else {
+                $sql .= "?";
+            }
+
+            $sql .= ")";
         } else {
-            $sql .= ":{$this->getColumnParam()}";
+            $sql .= "?";
         }
 
         return $sql;
+    }
+
+    public function bindValue(\PDOStatement &$statement, TableColumn $column): void
+    {
+        $value = $this->getValue();
+        if ($this->getComperision()->isIn()) {
+            if (is_array($value)) {
+                foreach ($value as $seperateValue) {
+                    $statement->bindValue(self::$countBinds++, $seperateValue, $column->getType()->getPdoType());
+                }
+
+                return;
+            }
+        }
+
+        $statement->bindValue(self::$countBinds++, $value, $column->getType()->getPdoType());
     }
 }

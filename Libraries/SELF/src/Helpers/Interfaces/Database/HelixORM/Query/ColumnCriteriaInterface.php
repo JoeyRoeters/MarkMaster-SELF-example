@@ -9,7 +9,7 @@ interface ColumnCriteriaInterface extends CriteriaInterface
     /**
      * @return Criteria
      */
-    public function getCriteria(): Criteria;
+    public function getComperision(): Criteria;
 
     /**
      * @return string
