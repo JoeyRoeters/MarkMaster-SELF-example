@@ -3,31 +3,61 @@
 namespace SELF\src\Http;
 
 use SELF\src\Container;
-use SELF\src\Helpers\Route\Routable;
+use SELF\src\Exceptions\Route\RouteNotFoundException;
+use SELF\src\Helpers\Request\RequestChain;
+use SELF\src\Helpers\Request\Uri;
+use SELF\src\Helpers\Route\AbstractRoutable;
 
 class Router
 {
-    private static self $instance;
-
+    /**
+     * @var Route[] $routes
+     */
     private array $routes = [];
 
-    public function __construct()
+    public function __construct(protected Container $container)
     {
         $this->registerRoutes();
-
-        var_dump($this->routes);
     }
 
-    public static function getInstance(): static
+    public function handleRoute(Request $request): mixed
     {
-        if (! isset(static::$instance)) {
-            static::$instance = new static();
+        $route = $this->matchRoute($request->getUri());
+
+        return (new RequestChain($this->container))
+            ->setRequest($request)
+            ->setStages($route->getMiddleware())
+            ->setFinally(fn (Request $request) => $this->sendToController($request, $route))
+            ->handleChain();
+    }
+
+    private function sendToController(Request $request, Route $route): mixed
+    {
+        $targetClass = $this->container->resolve(
+            $route->getTargetClass()
+        );
+
+        $targetMethod = $route->getTargetMethod();
+
+        $params = $route->resolveInlineParameters($request->getUri());
+
+        return $targetClass->$targetMethod(
+            $request, $params
+        );
+    }
+
+    private function matchRoute(Uri $uri): Route
+    {
+        foreach ($this->routes as $route) {
+            if ($route->isMatch($uri)) {
+                return $route;
+            }
         }
 
-        return static::$instance;
+        throw new RouteNotFoundException();
     }
 
-    public function registerRoutes(): void
+    private function registerRoutes(): void
     {
         $dirs = array_filter(glob(APP . '/Domains/*'), 'is_dir');
 
@@ -37,13 +67,21 @@ class Router
             if (is_dir($routeDir)) {
                 foreach (array_slice(scandir($routeDir), 2) as $file) {
                     $file = "$routeDir/$file";
-                    $class = new $file();
-//
-                    if ($class instanceof Routable) {
-                        $this->routes[] = $class->getRoutes();
+                    $class = $this->getClassFromFile($file);
+
+                    if ($class instanceof AbstractRoutable) {
+                        array_push($this->routes, ...$class->getRoutes());
                     }
                 }
             }
         }
+    }
+
+    private function getClassFromFile(string $file): object
+    {
+        $target = str_replace(
+            '/', '\\', substr(str_replace([ROOT, '.php'], '', $file), 1)
+        );
+        return $this->container->resolve($target);
     }
 }

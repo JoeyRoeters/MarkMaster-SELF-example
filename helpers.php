@@ -25,3 +25,17 @@ function sdd($var): void
     s_dump($var);
     die();
 }
+
+function array_map_with_keys(callable $callback, array $array): array {
+    $result = [];
+
+    foreach ($array as $key => $value) {
+        $assoc = $callback($value, $key);
+
+        foreach ($assoc as $mapKey => $mapValue) {
+            $result[$mapKey] = $mapValue;
+        }
+    }
+
+    return $result;
+}

@@ -14,7 +14,7 @@ class RequestChain
 
     private array $stages;
 
-    public function __construct(private Container $container)
+    public function __construct(private readonly Container $container)
     {}
 
     public function setRequest(Request $request): self

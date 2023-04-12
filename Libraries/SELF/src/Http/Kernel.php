@@ -29,7 +29,6 @@ class Kernel
 
     public function sendRequestToRouter(Request $request)
     {
-        var_dump('Dit heeft gewerkt');
-        die();
+        $this->router->handleRoute($request);
     }
 }

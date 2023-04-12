@@ -4,12 +4,19 @@ namespace SELF\src\Helpers\Route;
 
 use SELF\src\Http\Route;
 
-class Routable
+abstract class AbstractRoutable
 {
     /**
      * @var Route[] $routes
      */
     protected array $routes = [];
+
+    public function __construct()
+    {
+        $this->buildRoutes();
+    }
+
+    abstract public function buildRoutes(): void;
 
     public function make(Route $route): self
     {
