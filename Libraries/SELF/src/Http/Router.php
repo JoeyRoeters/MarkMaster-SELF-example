@@ -5,7 +5,6 @@ namespace SELF\src\Http;
 use SELF\src\Container;
 use SELF\src\Exceptions\Route\RouteNotFoundException;
 use SELF\src\Helpers\Request\RequestChain;
-use SELF\src\Helpers\Request\Uri;
 use SELF\src\Helpers\Route\AbstractRoutable;
 
 class Router
@@ -15,8 +14,11 @@ class Router
      */
     private array $routes = [];
 
-    public function __construct(protected Container $container)
+    private Container $container;
+
+    public function __construct()
     {
+        $this->container = Container::getInstance();
         $this->registerRoutes();
     }
 
