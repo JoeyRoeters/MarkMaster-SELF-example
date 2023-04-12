@@ -10,7 +10,7 @@ require __DIR__ . '/../helpers.php';
 
 session_start();
 
-$app = new Application();
+$app = new Application(__DIR__);
 $router = new Router();
 
 $app->set(Kernel::class, fn () => new Kernel($app, $router));

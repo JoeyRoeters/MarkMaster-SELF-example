@@ -4,6 +4,7 @@ namespace SELF\src\Http\Middleware;
 
 use Closure;
 use SELF\src\Http\Request;
+use SELF\src\Http\Response;
 
 class ExampleMiddleware extends Middleware
 {

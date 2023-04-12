@@ -35,7 +35,7 @@ class RequestChain
         return $this;
     }
 
-    public function handleChain()
+    public function handleChain(): mixed
     {
         return $this->process(
             $this->request,

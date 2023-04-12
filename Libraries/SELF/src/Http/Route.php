@@ -2,11 +2,13 @@
 
 namespace SELF\src\Http;
 
+use SELF\src\Helpers\Enums\MethodEnum;
+
 class Route
 {
     public function __construct(
         //todo request method needs to be enum
-        private         $requestMethod,
+        private MethodEnum $requestMethod,
         private string  $uri,
         private string  $targetClass,
         private ?string $targetMethod,

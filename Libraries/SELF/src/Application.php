@@ -5,7 +5,9 @@ use SELF\src\Database\Database;
 
 class Application extends Container
 {
-    public function __construct()
+    public function __construct(
+        protected string $appPath,
+    )
     {
         $this->registerServices();
     }
