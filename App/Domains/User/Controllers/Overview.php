@@ -27,7 +27,7 @@ class Overview
 
     public function index(Request $request, array $params)
     {
-        var_dump('Indexing the users thingy');
+        var_dump($params['user'] . ' inline parameter!');
     }
 
     public function test(Request $request)
