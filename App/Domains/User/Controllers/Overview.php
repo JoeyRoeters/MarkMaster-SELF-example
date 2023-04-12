@@ -29,4 +29,9 @@ class Overview
     {
         var_dump('Indexing the users thingy');
     }
+
+    public function test(Request $request)
+    {
+        var_dump('this is root');
+    }
 }

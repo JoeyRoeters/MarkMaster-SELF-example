@@ -14,16 +14,15 @@ use SELF\src\Helpers\Request\Uri;
  * @method static self PATCH(string $path, string $targetClass, string $targetMethod, array $middleware = [])
  * @method static self OPTIONS(string $path, string $targetClass, string $targetMethod, array $middleware = [])
  * @method static self HEAD(string $path, string $targetClass, string $targetMethod, array $middleware = [])
- *
  */
 class Route
 {
     private function __construct(
-        private MethodEnum $requestMethod,
-        private string     $path,
-        private string     $targetClass,
-        private ?string    $targetMethod,
-        private array      $middleware = [],
+        private readonly MethodEnum $requestMethod,
+        private readonly string     $path,
+        private readonly string     $targetClass,
+        private readonly string     $targetMethod,
+        private readonly array      $middleware = [],
     ) {}
 
     public static function __callStatic(string $name, array $arguments): self
@@ -67,11 +66,15 @@ class Route
 
     public function resolveInlineParameters(Uri $uri): array
     {
+        $inlineParams = $this->getInlineParameters();
+        if (empty($inlineParams)) {
+            return [];
+        }
+
         $parts = explode('/', $uri->getPath());
         $params = array_values(
             array_filter($parts, fn (string $substr) => ! str_contains($this->getPath(), $substr))
         );
-        $inlineParams = $this->getInlineParameters();
 
         return array_map_with_keys(
             fn (string $param, int $index) => [$inlineParams[$index] => $param],
@@ -90,16 +93,10 @@ class Route
         return ! empty($this->getMiddleware());
     }
 
-    public function isMatch(Uri $uri): bool
+    public function isMatch(Request $request): bool
     {
-        return preg_match($this->getMatchablePath(), $uri->getPath()) === 1;
-    }
-
-    public function withoutMiddleware(): self
-    {
-        $new = clone $this;
-        $this->middleware = [];
-        return $new;
+        $pathFound = preg_match($this->getMatchablePath(), $request->getUri()->getPath()) === 1;
+        return $pathFound && $request->getMethod() === $this->getRequestMethod();
     }
 
     /**
@@ -111,6 +108,6 @@ class Route
     private function getMatchablePath(): string
     {
         $inlineParams = array_map(fn (string $param) => '{' . $param . '}', $this->getInlineParameters());
-        return '(' . str_replace($inlineParams, '.*?', $this->getPath()) . ')';
+        return '(^' . str_replace($inlineParams, '.*?', $this->getPath()) . '$)';
     }
 }

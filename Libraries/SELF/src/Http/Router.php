@@ -22,7 +22,7 @@ class Router
 
     public function handleRoute(Request $request): mixed
     {
-        $route = $this->matchRoute($request->getUri());
+        $route = $this->matchRoute($request);
 
         return (new RequestChain($this->container))
             ->setRequest($request)
@@ -46,10 +46,10 @@ class Router
         );
     }
 
-    private function matchRoute(Uri $uri): Route
+    private function matchRoute(Request $request): Route
     {
         foreach ($this->routes as $route) {
-            if ($route->isMatch($uri)) {
+            if ($route->isMatch($request)) {
                 return $route;
             }
         }

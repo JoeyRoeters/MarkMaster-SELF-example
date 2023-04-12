@@ -11,7 +11,10 @@ class Api extends AbstractRoutable {
     {
         $this
             ->make(
-                Route::GET('/users', Overview::class, 'index')
+                Route::GET('/', Overview::class, 'test')
+            )
+            ->make(
+                Route::GET('/users/{user}', Overview::class, 'index')
             );
     }
 }
