@@ -12,3 +12,16 @@ function environment(string $key): string
 {
     return SELF\src\Environment::getInstance()->get($key);
 }
+
+function s_dump($var): void
+{
+    echo '<pre>';
+    var_dump($var);
+    echo '</pre>';
+}
+
+function sdd($var): void
+{
+    s_dump($var);
+    die();
+}
