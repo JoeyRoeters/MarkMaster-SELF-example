@@ -60,7 +60,7 @@ abstract class AbstractQuery
         if (method_exists($this, $name)) {
             return $this->{$name}(...$arguments);
         }
-        
+
         // loop over magic methods
         switch (DatabaseMagicFunctionsEnum::identify($name)) {
             case DatabaseMagicFunctionsEnum::FILTER:

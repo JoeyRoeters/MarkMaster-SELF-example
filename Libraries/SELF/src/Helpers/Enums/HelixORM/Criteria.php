@@ -57,18 +57,4 @@ enum Criteria: string
         return !$this->isOrder();
     }
 
-    private function criteriaWeight(CriteriaInterface $criteria): int
-    {
-        return match (true) {
-            $criteria instanceof FilterCriteria => 1,
-            $criteria instanceof OrderCriteria => 2,
-            $criteria instanceof LimitCriteria => 3,
-            default => throw new CriteriaException('Criteria weight not set. Criteria: ' . get_class($criteria))
-        };
-    }
-
-    public function sortCriterias(array $criterias): array
-    {
-
-    }
 }
