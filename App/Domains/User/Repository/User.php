@@ -144,7 +144,7 @@ class User extends AuthenticatableRecord
     public function getExams(): array
     {
         $examIds = array_pluck(
-            'id',
+            'exam_id',
             ExamUserQuery::create()
                 ->filterByUserId($this->id)
                 ->find()
@@ -175,6 +175,10 @@ class User extends AuthenticatableRecord
             'is_student' => $this->isStudent(),
             'is_teacher' => $this->isTeacher(),
             'is_not_student' => $this->isAdmin() || $this->isTeacher(),
+            'exam_ids' => array_map(
+                fn (Exam $exam) => $exam->getId(),
+                $this->getExams(),
+            ),
         ];
     }
 }

@@ -23,6 +23,10 @@ class RoleQuery extends AbstractQuery
 
     }
 
+    /**
+     * @param RoleEnum $roleEnum
+     * @return Role
+     */
     public static function findOrCreate(RoleEnum $roleEnum): Role
     {
         $role = RoleQuery::create()

@@ -20,6 +20,10 @@ class StudentClassQuery extends AbstractQuery
         return StudentClass::class;
     }
 
+    /**
+     * @param User $user
+     * @return HelixObjectCollection
+     */
     public function getStudentClasses(User $user): HelixObjectCollection
     {
         $classIds = StudentClassToStudentQuery::create()

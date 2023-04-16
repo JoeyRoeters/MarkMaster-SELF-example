@@ -12,6 +12,9 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
  */
 class AuthQuery extends AbstractQuery
 {
+    /**
+     * @return string
+     */
     public function getModel(): string
     {
         return Auth::class;

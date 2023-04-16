@@ -11,7 +11,10 @@ use SELF\src\Http\Controller;
 
 class MarkController extends Controller
 {
-    public function index()
+    /**
+     * @return DatatableResponse
+     */
+    public function index(): DatatableResponse
     {
         $dataTable = new DataTableResponse('Cijfers');
 

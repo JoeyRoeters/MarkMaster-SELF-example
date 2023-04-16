@@ -69,6 +69,10 @@ class Exam extends ActiveRecord
             ->get();
     }
 
+    /**
+     * @param int[] $classIds
+     * @return $this
+     */
     public function syncClassIds(array $classIds): self
     {
         ExamClassQuery::create()
@@ -97,17 +101,24 @@ class Exam extends ActiveRecord
             ->get();
     }
 
+    /**
+     * @return HelixObjectCollection
+     */
     public function getMarks(): HelixObjectCollection
     {
         return MarkQuery::create()->filterByExamId($this->getId())->find();
     }
 
+    /**
+     * @return bool
+     */
     public function hasRights(): bool
     {
         $user = Authenticator::user();
         if ($user->isAdmin()) {
             return true;
         }
+
         return $user->getId() === $this->getTeacherId();
     }
 
@@ -117,6 +128,10 @@ class Exam extends ActiveRecord
         return $user->isStudent() && ! $user->hasRegisteredForExam($this);
     }
 
+    /**
+     * @param bool $full
+     * @return array
+     */
     public function export(bool $full = false): array
     {
         $data = [

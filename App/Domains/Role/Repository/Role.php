@@ -6,6 +6,13 @@ use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @method int getId()
+ * @method string getName()
+ * @method Role setName(string $name)
+ */
 class Role extends ActiveRecord
 {
     protected string $table = 'roles';

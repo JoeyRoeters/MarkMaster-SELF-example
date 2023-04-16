@@ -12,12 +12,19 @@ use SELF\src\Http\Responses\Response;
 
 class ClassController
 {
+    /**
+     * @return MustacheResponse
+     */
     public function index(): MustacheResponse
     {
-        //todo implement
         return new MustacheResponse('Classes/index');
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return MustacheResponse
+     */
     public function indexNewOrEdit(Request $request, array $params): MustacheResponse
     {
         $viewParams = [];
@@ -33,6 +40,11 @@ class ClassController
         return new MustacheResponse('Classes/new_or_edit', $viewParams);
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return Response
+     */
     public function submitNewOrEdit(Request $request, array $params): Response
     {
         $data = $request->validate([

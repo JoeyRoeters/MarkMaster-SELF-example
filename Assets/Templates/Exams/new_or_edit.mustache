@@ -45,7 +45,7 @@
                 </label>
                 <select name="class_ids[]" id="class_ids" multiple>
                     {% foreach classes as class %}
-                    <option value="{{ class.id }}">{{ class.name }}</option>
+                    <option value="{{ class.id }}" {% if class.selected == true %} selected {% endif %}>{{ class.name }}</option>
                     {% endforeach classes %}
                 </select>
             </div>

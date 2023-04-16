@@ -21,6 +21,10 @@ class DatatableResponse extends MustacheResponse
         parent::__construct('Datatable/datatable', $this->data, $this->title);
     }
 
+    /**
+     * @param string $url
+     * @return $this
+     */
     public function setCreate(string $url): self
     {
         $this->mustache->appendData([
@@ -30,6 +34,10 @@ class DatatableResponse extends MustacheResponse
         return $this;
     }
 
+    /**
+     * @param DatatableRowDTOInterface $row
+     * @return $this
+     */
     public function addRow(DatatableRowDTOInterface $row): self
     {
         $this->rows[] = $row;
@@ -37,6 +45,10 @@ class DatatableResponse extends MustacheResponse
         return $this;
     }
 
+    /**
+     * @param array $rows
+     * @return $this
+     */
     public function setRows(array $rows): self
     {
         $this->rows = $rows;
@@ -44,6 +56,10 @@ class DatatableResponse extends MustacheResponse
         return $this;
     }
 
+    /**
+     * @param DatatableHeaderDTOInterface $header
+     * @return $this
+     */
     public function addHeader(DatatableHeaderDTOInterface $header): self
     {
         $this->columns[] = $header;
@@ -51,6 +67,10 @@ class DatatableResponse extends MustacheResponse
         return $this;
     }
 
+    /**
+     * @param DatatableActionDTOInterface $action
+     * @return $this
+     */
     public function addAction(DatatableActionDTOInterface $action): self
     {
         $this->actions[] = $action;
@@ -58,6 +78,10 @@ class DatatableResponse extends MustacheResponse
         return $this;
     }
 
+    /**
+     * @param array $headers
+     * @return $this
+     */
     public function setHeaders(array $headers): self
     {
         $this->columns = $headers;
@@ -65,6 +89,9 @@ class DatatableResponse extends MustacheResponse
         return $this;
     }
 
+    /**
+     * @return void
+     */
     public function output(): void
     {
         $this->mustache->appendData([
@@ -72,8 +99,6 @@ class DatatableResponse extends MustacheResponse
             'rows' => array_map(fn ($row) => $row->getData(), $this->rows),
             'actions' => array_map(fn ($action) => $action->export(), $this->actions)
         ]);
-
-//        sdd($this->mustache->getData());
 
         parent::output();
     }

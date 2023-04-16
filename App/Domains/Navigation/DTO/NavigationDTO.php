@@ -13,6 +13,9 @@ class NavigationDTO
     {
     }
 
+    /**
+     * @return array
+     */
     public function export(): array
     {
         return [

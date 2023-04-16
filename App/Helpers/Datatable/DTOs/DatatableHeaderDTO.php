@@ -11,6 +11,9 @@ class DatatableHeaderDTO implements DatatableHeaderDTOInterface
     ) {
     }
 
+    /**
+     * @return string
+     */
     public function getTitle(): string
     {
         return $this->title;

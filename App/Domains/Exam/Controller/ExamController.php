@@ -6,6 +6,7 @@ use App\Authenticator;
 use App\Domains\Class\Repository\StudentClass;
 use App\Domains\Class\Repository\StudentClassQuery;
 use App\Domains\Exam\Repository\Exam;
+use App\Domains\Exam\Repository\ExamClassQuery;
 use App\Domains\Exam\Repository\ExamQuery;
 use App\Domains\Exam\Repository\ExamUser;
 use App\Domains\Mark\Repository\Mark;
@@ -27,6 +28,9 @@ class ExamController extends Controller
 {
     use UserTrait;
 
+    /**
+     * @return DatatableResponse
+     */
     public function index()
     {
         $datatable = new DatatableResponse('Tentamens');
@@ -51,19 +55,16 @@ class ExamController extends Controller
         return $datatable;
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return MustacheResponse
+     */
     public function indexNewOrEdit(Request $request, array $params): MustacheResponse
     {
         $title = 'Examen maken';
-        $viewParams = [
-            'classes' => array_map(
-                fn (StudentClass $class) => [
-                    'id' => $class->id,
-                    'name' => $class->name,
-                ],
-                StudentClassQuery::create()->find()->get()
-            ),
-        ];
-
+        $model = null;
+        $viewParams = [];
         if (isset($params['exam'])) {
             $title = 'Examen wijzigen';
             $model = ExamQuery::create()->findPk($params['exam']);
@@ -73,9 +74,23 @@ class ExamController extends Controller
             }
         }
 
+        $viewParams['classes'] =  array_map(
+            fn (StudentClass $class) => [
+                'id' => $class->id,
+                'name' => $class->name,
+                'selected' => $model instanceof Exam ? ExamClassQuery::create()->filterByClassId($class->getId())->filterByExamId($model->getId())->exists() : false
+            ],
+            StudentClassQuery::create()->find()->get()
+        );
+
         return new MustacheResponse('Exams/new_or_edit', $viewParams, $title);
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return RedirectResponse
+     */
     public function submitNewOrEdit(Request $request, array $params)
     {
         $data = $request->validate([
@@ -118,6 +133,11 @@ class ExamController extends Controller
         return new RedirectResponse(route('/exams'));
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return RedirectResponse
+     */
     public function indexUpdateMarks(Request $request, array $params): MustacheResponse
     {
         /** @var Exam | null $exam */
@@ -127,23 +147,35 @@ class ExamController extends Controller
             return new MustacheResponse('404', [], '404');
         }
 
+        $data = [
+            'exam' => $exam->export(true),
+            'marks' => array_map(
+                fn (Mark $mark) => $mark->export(),
+                $exam->marks()
+            ),
+            'students' => array_map(
+                fn (User $student) => $student->export(),
+                UserQuery::create()->find()->get()
+            ),
+        ];
+
+        $data['students'] = array_filter(
+            $data['students'],
+            fn (array $student) => $student['is_student'] && in_array($exam->getId(), $student['exam_ids'])
+        );
+
         return new MustacheResponse(
             'Exams/update_marks',
-            [
-                'exam' => $exam->export(true),
-                'marks' => array_map(
-                    fn (Mark $mark) => $mark->export(),
-                    $exam->marks()
-                ),
-                'students' => array_map(
-                    fn (User $student) => $student->export(),
-                    UserQuery::create()->find()->get()
-                ),
-            ],
+            $data,
             'Cijfers toevoegen'
         );
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return RedirectResponse
+     */
     public function newOrEditMark(Request $request, array $params): RedirectResponse
     {
         $data = $request->validate([
@@ -174,6 +206,11 @@ class ExamController extends Controller
         return $request->back();
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return RedirectResponse
+     */
     public function deleteMark(Request $request, array $params): RedirectResponse
     {
         $examId = $params['exam'];
@@ -205,6 +242,11 @@ class ExamController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return MustacheResponse
+     */
     public function show(Request $request, array $params)
     {
         $exam = ExamQuery::create()->findPK($params['id']);
@@ -217,6 +259,11 @@ class ExamController extends Controller
         return new MustacheResponse('Exams/show', $data, 'Tentamen');
     }
 
+    /**
+     * @param Request $request
+     * @param array $params
+     * @return RedirectResponse
+     */
     public function delete(Request $request, array $params)
     {
         $exam = ExamQuery::create()->findPK($params['exam']);

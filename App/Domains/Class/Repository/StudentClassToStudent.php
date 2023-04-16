@@ -37,6 +37,9 @@ class StudentClassToStudent extends ActiveRecord
         ];
     }
 
+    /**
+     * @return StudentClass|null
+     */
     public function getClass(): ?StudentClass
     {
         return StudentClassQuery::create()->findPk($this->getStudentClassId());

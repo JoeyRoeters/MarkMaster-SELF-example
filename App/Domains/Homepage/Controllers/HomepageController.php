@@ -6,11 +6,13 @@ use App\Authenticator;
 use App\Domains\Exam\Repository\ExamQuery;
 use App\Domains\Mark\Repository\MarkQuery;
 use SELF\src\Http\Responses\MustacheResponse;
-use SELF\src\Http\Responses\Response;
 
 class HomepageController
 {
-    public function index(): Response
+    /**
+     * @return MustacheResponse
+     */
+    public function index(): MustacheResponse
     {
         $data = [];
 

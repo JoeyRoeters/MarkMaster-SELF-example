@@ -17,6 +17,9 @@ use SELF\src\Helpers\Interfaces\Auth\AuthAppRecordInterface;
  */
 class Auth extends AuthRecord implements AuthAppRecordInterface
 {
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         $user = UserQuery::create()->findPk($this->getIdentifier());

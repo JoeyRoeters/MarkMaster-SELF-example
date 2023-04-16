@@ -20,6 +20,11 @@ class UserHasRoleMiddleware extends Middleware
         $this->roles = is_array($roles) ? $roles : [$roles];
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next): mixed
     {
         $user = Authenticator::user();
@@ -39,6 +44,9 @@ class UserHasRoleMiddleware extends Middleware
         die();
     }
 
+    /**
+     * @return void
+     */
     private function fail(): void
     {
         var_dump(

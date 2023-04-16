@@ -45,16 +45,25 @@ class Mark extends ActiveRecord
         ];
     }
 
+    /**
+     * @return User
+     */
     public function getStudent(): User
     {
         return UserQuery::create()->findPk($this->getStudentId());
     }
 
+    /**
+     * @return Exam
+     */
     public function getExam(): Exam
     {
         return ExamQuery::create()->findPk($this->getExamId());
     }
 
+    /**
+     * @return array
+     */
     public function export(): array
     {
         return [

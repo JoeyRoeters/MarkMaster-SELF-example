@@ -13,21 +13,33 @@ class DatatableActionDTO implements DatatableActionDTOInterface
     ) {
     }
 
+    /**
+     * @return string
+     */
     public function getLabel(): string
     {
         return $this->label;
     }
 
+    /**
+     * @return string
+     */
     public function getIcon(): string
     {
         return $this->icon;
     }
 
+    /**
+     * @return string
+     */
     public function getRoute(): string
     {
         return $this->route;
     }
 
+    /**
+     * @return array
+     */
     public function export(): array
     {
         return [

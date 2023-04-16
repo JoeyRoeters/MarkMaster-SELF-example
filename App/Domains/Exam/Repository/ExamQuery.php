@@ -22,7 +22,10 @@ class ExamQuery extends AbstractQuery
         return Exam::class;
     }
 
-
+    /**
+     * @param User $user
+     * @return self
+     */
     public function filterByIsVisible(User $user): self
     {
         if ($user->isAdmin() || $user->isTeacher()) {
