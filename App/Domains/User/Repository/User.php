@@ -1,12 +1,15 @@
 <?php
 namespace App\Domains\User\Repository;
 
+use App\Domains\Class\Repository\StudentClassQuery;
 use App\Domains\Role\Repository\Role;
 use App\Domains\Role\Repository\RoleQuery;
 use App\Domains\Role\Repository\RoleUser;
 use App\Domains\Role\Repository\RoleUserQuery;
+use App\Enums\RoleEnum;
 use DateTime;
 use SELF\src\Auth\AuthenticatableRecord;
+use SELF\src\HelixORM\HelixObjectCollection;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
@@ -101,12 +104,37 @@ class User extends AuthenticatableRecord
         return $this->password;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(RoleQuery::findOrCreate(RoleEnum::ADMIN));
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->hasRole(RoleQuery::findOrCreate(RoleEnum::STUDENT));
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->hasRole(RoleQuery::findOrCreate(RoleEnum::TEACHER));
+    }
+
+    public function getClasses(): HelixObjectCollection
+    {
+        return StudentClassQuery::create()
+            ->filterByStudentId($this->id)
+            ->find();
+    }
+
     public function export(): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'is_admin' => $this->isAdmin(),
+            'is_student' => $this->isStudent(),
+            'is_teacher' => $this->isTeacher(),
         ];
     }
 }

@@ -9,7 +9,7 @@ class Controller
 {
 public function __construct()
 {
-//    Authenticator::login(UserQuery::create()->findPk(1));
-//    var_dump(Authenticator::user());
+    Authenticator::login(UserQuery::create()->findPk(1));
+    var_dump(Authenticator::user());
 }
 }

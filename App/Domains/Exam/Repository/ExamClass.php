@@ -6,6 +6,22 @@ use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 
+/**
+ * @property int $id
+ * @property int $class_id
+ * @property int $exam_id
+ * @property \DateTime $created_at
+ * @property \DateTime $updated_at
+ * @method int getId()
+ * @method int getClassId()
+ * @method int getExamId()
+ * @method \DateTime getCreatedAt()
+ * @method \DateTime getUpdatedAt()
+ * @method ExamClass setClassId(int $classId)
+ * @method ExamClass setExamId(int $examId)
+ * @method ExamClass setCreatedAt(\DateTime $createdAt)
+ * @method ExamClass setUpdatedAt(\DateTime $updatedAt)
+ */
 class ExamClass extends ActiveRecord
 {
     protected string $table = 'exam_classes';
