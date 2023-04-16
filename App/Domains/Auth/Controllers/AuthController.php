@@ -21,7 +21,7 @@ class AuthController extends Controller
 
     public function login(Request $request): Response
     {
-        $attributes = $request->getPost();
+        $attributes = $request->postParameters();
 
         /**
          * @var User | null $user

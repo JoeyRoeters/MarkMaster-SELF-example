@@ -1,9 +1,12 @@
 <?php
 namespace SELF\src\Http;
 
+use SELF\src\Exceptions\Validation\ValidationMethodNotFoundException;
 use SELF\src\Helpers\Enums\MethodEnum;
+use SELF\src\Helpers\Enums\Validation\ValidateEnum;
 use SELF\src\Helpers\Interfaces\Message\RequestInterface;
 use SELF\src\Helpers\Interfaces\Message\UriInterface;
+use SELF\src\Validator;
 
 class Request extends Message implements RequestInterface
 {
@@ -58,8 +61,36 @@ class Request extends Message implements RequestInterface
         return $new;
     }
 
-    public function getPost(): array
+    /**
+     * @param array<string, ValidateEnum> $toValidate
+     * @return bool|array
+     * @throws ValidationMethodNotFoundException
+     */
+    public function validate(array $toValidate): bool | array
+    {
+        $data = $this->allParameters();
+
+        foreach ($toValidate as $key => $validateEnum) {
+            if (! isset($data[$key]) || ! Validator::validate($validateEnum, $data[$key])) {
+                return false;
+            }
+        }
+
+        return $data;
+    }
+
+    public function allParameters(): array
+    {
+        return $this->getParameters() + $this->postParameters();
+    }
+
+    public function postParameters(): array
     {
         return $_POST;
+    }
+
+    public function getParameters(): array
+    {
+        return $_GET;
     }
 }

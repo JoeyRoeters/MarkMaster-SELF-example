@@ -65,8 +65,7 @@ enum ParseEnum: string
         // Check for isset condition
         if (preg_match('/isset\(([^)]+)\)/', $variable, $issetMatches)) {
             $issetVariable = $issetMatches[1];
-            $issetValue = isset($data[$issetVariable]) ? $data[$issetVariable] : false;
-            $result = isset($issetValue);
+            $result = isset($data[$issetVariable]) ? $data[$issetVariable] : false;
         } else if (preg_match('/^(.+?)\s*(==|!=|<|>|<=|>=)\s*(.+?)$/', $variable, $comparison)) {
             $parts = preg_split('/\./', $comparison[1]);
             if (count($parts) > 1) {
@@ -80,6 +79,8 @@ enum ParseEnum: string
         } else {
             $result = isset($data[$variable]) ? $data[$variable] : false;
         }
+
+//        s_dump($ifTrue);
 
         return $result === true ? $ifTrue : $ifFalse;
     }

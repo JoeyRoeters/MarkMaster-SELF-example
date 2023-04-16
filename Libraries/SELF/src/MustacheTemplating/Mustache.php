@@ -101,8 +101,6 @@ class Mustache implements TemplateEngineInterface
             $this->content = ParseEnum::EXTENDS->parse($this, $matches, $data);
         }
 
-        $this->content = ParseEnum::VARIABLE->parse($this, [], $data);
-
         // Parse foreach loops in the template
         $this->content = preg_replace_callback('/\{%\s*foreach\s+(.+?)\s+as\s+(.+?)\s*%\}(.*?)\{%\s*endforeach\s*%\}/s', function($matches) use(&$data) {
             return ParseEnum::FOREACH->parse($this, $matches, $data);
@@ -122,6 +120,8 @@ class Mustache implements TemplateEngineInterface
         $this->content = preg_replace_callback('/\{%\s*include\s+\'(.+?)\'\s*%\}/s', function($matches) use($data) {
             return ParseEnum::INCLUDE->parse($this, $matches, $data);
         }, $this->content);
+
+        $this->content = ParseEnum::VARIABLE->parse($this, [], $data);
 
         return $this->content;
     }

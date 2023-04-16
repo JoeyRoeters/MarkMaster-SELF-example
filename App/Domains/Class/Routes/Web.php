@@ -42,6 +42,13 @@ class Web extends AbstractRoutable
                 )
             )
             ->make(
+                Route::GET(
+                    path: '/classes/{class}/edit',
+                    targetClass: ClassController::class,
+                    targetMethod: 'indexNewOrEdit'
+                )
+            )
+            ->make(
                 Route::POST(
                     path: '/classes/{class}/edit',
                     targetClass: ClassController::class,

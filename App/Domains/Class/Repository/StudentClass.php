@@ -32,5 +32,4 @@ class StudentClass extends ActiveRecord
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
         ];
     }
-
 }

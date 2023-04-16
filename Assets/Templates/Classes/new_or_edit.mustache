@@ -1,0 +1,31 @@
+{% extends 'base' %}
+
+{% block content %}
+    <div class="m-8">
+        <form method="post">
+            <div>
+                <label for="name" class="required form-label">
+                    Naam
+                </label>
+                <input
+                    value="{{ class.name  }}"
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control form-control-solid" />
+            </div>
+
+            <div class="d-flex align-items-center mt-4">
+                <button type="submit" class="btn btn-primary">
+                    Opslaan
+                </button>
+
+                {% if failed %}
+                    <div class="text-danger mx-4">
+                        Kon niet opslaan door een fout in de invoer.
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

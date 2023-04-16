@@ -26,21 +26,26 @@ class UserHasRoleMiddleware extends Middleware
 
         if ($user === null) {
             $this->fail();
+            die();
         }
 
         foreach ($this->roles as $role) {
-            if (! $user->hasRole($role)) {
-                $this->fail();
+            if ($user->hasRole($role)) {
+                return $next($request);
             }
         }
 
-        return $next($request);
+        $this->fail();
+        die();
     }
 
     private function fail(): void
     {
-        die(
-            sprintf('Unauthenticated: user does not have role %s', $this->role->name)
+        var_dump(
+            sprintf(
+                'Unauthenticated: user does not have role %s',
+                implode(' or ', array_map(fn (Role $role) => $role->name, $this->roles))
+            )
         );
     }
 }
