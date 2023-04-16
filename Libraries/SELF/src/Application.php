@@ -14,6 +14,8 @@ class Application extends Container
 
     private function registerServices(): void
     {
+        $this->set(Session::class, fn () => Session::getInstance());
+        $this->set(Authenticator::class, fn () => Authenticator::getInstance());
         $this->set(Helix::class, fn () => Helix::getInstance());
     }
 }

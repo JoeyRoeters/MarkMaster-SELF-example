@@ -102,7 +102,13 @@ abstract class ActiveRecord implements ActiveRecordInterface
      * @param $value
      * @return void
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
+
+    public function set($name, $value)
+    {
         $this->data[$name] = $value;
     }
 

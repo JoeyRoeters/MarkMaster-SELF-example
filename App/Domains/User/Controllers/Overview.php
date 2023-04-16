@@ -1,9 +1,11 @@
 <?php
 namespace App\Domains\User\Controllers;
 
+use App\Authenticator;
 use App\Domains\User\Repository\User;
 use App\Domains\User\Repository\UserQuery;
 use SELF\src\Http\Request;
+use SELF\src\Session;
 
 class Overview
 {
@@ -15,9 +17,6 @@ class Overview
 //
 //        s_dump($user);
 //
-//        $user = new User();
-//        $user->setName('appel');
-//        $user->save();
 //
 //        s_dump($user);
 //
@@ -32,6 +31,18 @@ class Overview
 
     public function test(Request $request)
     {
-        var_dump('this is root');
+//        $user = new User();
+//        $user->setName('tim');
+//        $user->setEmail('tim@laptify.nl');
+//        $user->save();
+
+        /**
+         * @var User $user
+         */
+        $user = UserQuery::create()->findPk(1);
+
+//        Authenticator::login($user);
+
+        sdd(Authenticator::user());
     }
 }

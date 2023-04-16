@@ -2,10 +2,9 @@
 namespace App\Domains\User\Repository;
 
 use DateTime;
-use SELF\src\HelixORM\Record\ActiveRecord;
+use SELF\src\Auth\AuthenticatableRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
-
 
 /**
  * Class User
@@ -27,7 +26,7 @@ use SELF\src\Helpers\Enums\HelixORM\ColumnType;
  * @method User setCreatedAt(DateTime $createdAt)
  * @method User setUpdatedAt(DateTime $updatedAt)
  */
-class User extends ActiveRecord
+class User extends AuthenticatableRecord
 {
     protected string $table = 'users';
 
@@ -41,5 +40,15 @@ class User extends ActiveRecord
             TableColumn::create('created_at', ColumnType::DATETIME)->autoTimestamp(),
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
         ];
+    }
+
+    public function getIdentifier(): string
+    {
+        return $this->id;
+    }
+
+    public function getHashedPassword(): string
+    {
+        return $this->password;
     }
 }
