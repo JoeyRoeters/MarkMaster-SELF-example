@@ -4,12 +4,12 @@
 <div class="m-8">
     <div>
         {% foreach marks as mark %}
-            <div class="p-4 d-flex">
-                <span>{{ mark.student_name }}</span>
-                <span class="mx-4">{{ mark.mark }}</span>
+            <div class="p-4 d-flex align-items-center">
+                <span class="w-100px">{{ mark.student }}</span>
+                <span class="mx-4 w-100px">{{ mark.mark }}</span>
                 <form
-                    method="delete"
-                    action="/exams/{{ exam.id }}/marks/{{ mark.id }}">
+                    method="post"
+                    action="/exams/{{ exam.id }}/marks/{{ mark.id }}/delete">
                     <button class="btn btn-secondary">
                         Delete
                     </button>
@@ -38,7 +38,10 @@
                 </label>
                 <input
                     type="number"
+                    step="0.1"
                     name="mark"
+                    min="1"
+                    max="10"
                     id="mark"
                     class="form-control form-control-solid"
                     placeholder="Voer cijfer in">

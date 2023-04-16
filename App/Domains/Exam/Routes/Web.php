@@ -14,6 +14,13 @@ class Web extends AbstractRoutable
         $this
             ->setBoundMiddleware([new RedirectUnauthenticatedMiddleware('/login')])
             ->make(
+                Route::POST(
+                    path: '/exams/{exam}/marks/{mark}/delete',
+                    targetClass: ExamController::class,
+                    targetMethod: 'deleteMark',
+                )
+            )
+            ->make(
                 Route::GET(
                     path: '/exams',
                     targetClass: ExamController::class,
@@ -59,7 +66,7 @@ class Web extends AbstractRoutable
                 Route::POST(
                     path: '/exams/{exam}/update-marks',
                     targetClass: ExamController::class,
-                    targetMethod: 'updateMarks',
+                    targetMethod: 'newOrEditMark',
                 )
             )
             ->make(

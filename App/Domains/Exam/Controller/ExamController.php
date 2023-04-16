@@ -137,9 +137,43 @@ class ExamController extends Controller
             'student_id' => ValidateEnum::NOT_EMPTY,
         ]);
 
+        // Multiply to store in database.
+        $data['mark'] *= 10;
+
         $examId = $params['exam'];
 
+        $mark = MarkQuery::create()
+            ->filterByExamId($examId)
+            ->filterByStudentId($data['student_id'])
+            ->findOne();
+
+        if ($mark === null) {
+            $mark = new Mark();
+        }
+
+        $mark
+            ->setExamId($examId)
+            ->setStudentId($data['student_id'])
+            ->setMark($data['mark'])
+            ->save();
+
         return $request->back();
+    }
+
+    public function deleteMark(Request $request, array $params): RedirectResponse
+    {
+        $examId = $params['exam'];
+        $markId = $params['mark'];
+
+        MarkQuery::create()
+            ->filterById($markId)
+            ->delete();
+
+        return new RedirectResponse(
+            route(
+                sprintf('/exams/%s/update-marks', $examId)
+            )
+        );
     }
 
     public function show(Request $request, array $params)
