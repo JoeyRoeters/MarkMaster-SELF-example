@@ -35,6 +35,11 @@ function sdd($var): void
     die();
 }
 
+function route(string $path): string
+{
+    return environment('APP_URL') . $path;
+}
+
 function array_map_with_keys(callable $callback, array $array): array
 {
     $result = [];
@@ -48,4 +53,12 @@ function array_map_with_keys(callable $callback, array $array): array
     }
 
     return $result;
+}
+
+function array_pluck(string $key, array $array): array
+{
+    return array_map(
+        fn (mixed $item) => is_object($item) ? $item->{$key} : $item[$key],
+        $array
+    );
 }

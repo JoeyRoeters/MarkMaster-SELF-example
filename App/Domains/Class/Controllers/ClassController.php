@@ -25,7 +25,7 @@ class ClassController
         if (isset($params['class'])) {
             $model = StudentClassQuery::create()->findPk($params['class']);
 
-            if ($model !== null) {
+            if ($model instanceof StudentClass) {
                 $viewParams['class']['name'] = $model->name;
             }
         }
@@ -58,6 +58,6 @@ class ClassController
             ->setName($data['name'])
             ->save();
 
-        return new RedirectResponse(environment('APP_URL') . '/classes');
+        return new RedirectResponse(route('/classes'));
     }
 }

@@ -2,9 +2,13 @@
 
 namespace App\Domains\Exam\Repository;
 
+use App\Domains\Class\Repository\StudentClass;
+use App\Domains\Class\Repository\StudentClassQuery;
+use SELF\src\HelixORM\HelixObjectCollection;
 use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
+use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
  * @property int $id
@@ -36,6 +40,40 @@ class Exam extends ActiveRecord
             TableColumn::create('created_at', ColumnType::DATETIME)->autoTimestamp(),
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
         ];
+    }
+
+    /**
+     * @return StudentClass[]
+     */
+    public function classes(): array
+    {
+        /** @var ExamClass[] $pivots */
+        $pivots = ExamClassQuery::create()
+            ->filterByExamId($this->id)
+            ->find()
+            ->get();
+
+        return StudentClassQuery::create()
+            ->filterById(array_pluck('id', $pivots), Criteria::IN)
+            ->find()
+            ->get();
+    }
+
+    public function syncClassIds(array $classIds): self
+    {
+        ExamClassQuery::create()
+            ->filterByClassId($classIds, Criteria::IN)
+            ->filterByExamId($this->id)
+            ->delete();
+
+        foreach ($classIds as $classId) {
+            (new ExamClass())
+                ->setClassId($classId)
+                ->setExamId($this->id)
+                ->save();
+        }
+
+        return $this;
     }
 
     public function export(): array

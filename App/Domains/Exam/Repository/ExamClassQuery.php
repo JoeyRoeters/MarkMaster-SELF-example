@@ -8,8 +8,8 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
  * @method self filterById(int $id, Criteria $criteria = Criteria::EQUALS)
- * @method self filterByClassId(int $classId, Criteria $criteria = Criteria::EQUALS)
- * @method self filterByExamId(int $examId, Criteria $criteria = Criteria::EQUALS)
+ * @method self filterByClassId(int | int[] $classId, Criteria $criteria = Criteria::EQUALS)
+ * @method self filterByExamId(int | int[] $examId, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByCreatedAt(\DateTime $createdAt, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByUpdatedAt(\DateTime $updatedAt, Criteria $criteria = Criteria::EQUALS)
  */
