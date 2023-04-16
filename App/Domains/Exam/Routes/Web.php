@@ -22,6 +22,13 @@ class Web extends AbstractRoutable
             )
             ->make(
                 Route::GET(
+                    path: '/exams/{id}',
+                    targetClass: ExamController::class,
+                    targetMethod: 'show',
+                )
+            )
+            ->make(
+                Route::GET(
                     path: '/exams/create',
                     targetClass: ExamController::class,
                     targetMethod: 'indexNewOrEdit'

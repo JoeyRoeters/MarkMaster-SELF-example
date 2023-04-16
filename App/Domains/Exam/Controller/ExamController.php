@@ -2,6 +2,7 @@
 
 namespace App\Domains\Exam\Controller;
 
+use App\Domains\Exam\Repository\Exam;
 use App\Domains\Exam\Repository\ExamQuery;
 use App\Helpers\Datatable\DTOs\DatatableHeaderDTO;
 use App\Helpers\Datatable\DTOs\DatatableRowDTO;
@@ -44,5 +45,17 @@ class ExamController extends Controller
     public function submitNewOrEdit(Request $request, array $params)
     {
         var_dump($this->user);
+    }
+
+    public function show(Request $request, array $params)
+    {
+        $exam = ExamQuery::create()->findPK($params['id']);
+        if (!$exam instanceof Exam) {
+            return new MustacheResponse('404', [], '404');
+        }
+
+        $data['exam'] = $exam->export(true);
+
+        return new MustacheResponse('Exams/show', $data, 'Tentamen');
     }
 }
