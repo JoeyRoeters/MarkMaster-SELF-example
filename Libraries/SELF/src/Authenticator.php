@@ -31,7 +31,7 @@ class Authenticator
         $this->authQuery = $this->getAuthQuery();
     }
 
-    public static function getInstance(): static
+    public static function getInstance(): self
     {
         if (! isset(static::$instance)) {
             static::$instance = new static();

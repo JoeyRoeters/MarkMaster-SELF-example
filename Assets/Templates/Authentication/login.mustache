@@ -9,7 +9,7 @@
             <!--end::Title-->
             <!--begin::Subtitle-->
             {% if loginFailed %}
-                <span>Kan niet inloggen met deze gegevens.</span>
+                <span class="text-danger">Kan niet inloggen met deze gegevens.</span>
             {% endif %}
             <!--end::Subtitle=-->
         </div>
@@ -18,13 +18,13 @@
         <!--begin::Input group=-->
         <div class="fv-row mb-8">
             <!--begin::Email-->
-            <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+            <input type="email" required placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Email-->
         </div>
         <!--end::Input group=-->
         <div class="fv-row mb-3">
             <!--begin::Password-->
-            <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
+            <input type="password" required placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Password-->
         </div>
         <!--end::Input group=-->
