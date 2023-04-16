@@ -23,7 +23,7 @@ class Route
         private readonly string     $path,
         private readonly string     $targetClass,
         private readonly string     $targetMethod,
-        private readonly array      $middleware = [],
+        private array               $middleware = [],
     ) {}
 
     public static function __callStatic(string $name, array $arguments): self
@@ -66,6 +66,11 @@ class Route
     public function getMiddleware(): array
     {
         return $this->middleware;
+    }
+
+    public function addMiddleware(array $middleware) : void
+    {
+        array_push($this->middleware, ...$middleware);
     }
 
     public function resolveInlineParameters(Uri $uri): array

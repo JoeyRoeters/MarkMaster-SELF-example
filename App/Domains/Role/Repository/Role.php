@@ -2,7 +2,6 @@
 
 namespace App\Domains\Role\Repository;
 
-use App\Enums\RoleEnum;
 use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
