@@ -21,6 +21,15 @@ class DatatableResponse extends MustacheResponse
         parent::__construct('Datatable/datatable', $this->data, $this->title);
     }
 
+    public function setCreate(string $url): self
+    {
+        $this->mustache->appendData([
+            'create' => $url
+        ]);
+
+        return $this;
+    }
+
     public function addRow(DatatableRowDTOInterface $row): self
     {
         $this->rows[] = $row;

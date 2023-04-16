@@ -24,7 +24,7 @@ class Web extends AbstractRoutable
                 Route::GET(
                     path: '/exams/create',
                     targetClass: ExamController::class,
-                    targetMethod: 'indexNewOrEdit'
+                    targetMethod: 'indexNewOrEdit',
                 )
             )
             ->make(
@@ -67,6 +67,13 @@ class Web extends AbstractRoutable
                     path: '/exams/{id}',
                     targetClass: ExamController::class,
                     targetMethod: 'show',
+                )
+            )
+            ->make(
+                Route::DELETE(
+                    path: '/exams/{exam}/delete',
+                    targetClass: ExamController::class,
+                    targetMethod: 'delete',
                 )
             );
     }

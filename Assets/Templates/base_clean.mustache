@@ -14,6 +14,7 @@
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
     <!--end::Global Stylesheets Bundle-->
     <script></script>
@@ -49,11 +50,37 @@
 <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
+<script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
+
 <!--end::Global Javascript Bundle-->
 
 {% block customJs %}
 
 {% endblock customJs %}
+
+<script>
+    let swalData = null;
+
+    const url = new URL(window.location.href);
+    const swalParams = url.searchParams.get('swal');
+    if (swalParams) {
+        swalData = JSON.parse(decodeURIComponent(window.atob(swalParams)));
+
+        history.replaceState && history.replaceState(
+                null, '', location.pathname + location.search.replace(/[\?&]swal=[^&]+/, '').replace(/^&/, '?') + location.hash
+        );
+    }
+
+    if (swalData) {
+        Swal.fire(swalData).then(result => {
+            if (swalData.url) {
+                if (result.isConfirmed) {
+                    window.location = data.url;
+                }
+            }
+        });
+    }
+</script>
 <!--end::Javascript-->
 </body>
 <!--end::Body-->

@@ -12,6 +12,7 @@ use App\Domains\User\Repository\User;
 use App\Domains\User\Repository\UserQuery;
 use App\Helpers\Datatable\DTOs\DatatableHeaderDTO;
 use App\Helpers\Datatable\DTOs\DatatableRowDTO;
+use App\Helpers\SweetAlert\SweetAlert;
 use App\Responses\DatatableResponse;
 use App\Traits\UserTrait;
 use SELF\src\Helpers\Enums\Validation\ValidateEnum;
@@ -33,6 +34,10 @@ class ExamController extends Controller
             new DatatableHeaderDTO('Datum'),
         ];
 
+        if ($this->user->isAdmin() || $this->user->isTeacher()) {
+            $datatable->setCreate(environment('APP_URL') . '/exams/create');
+        }
+
         $datatable->setHeaders($headers);
 
         $rows = array_map(function ($exam) {
@@ -40,7 +45,6 @@ class ExamController extends Controller
         }, ExamQuery::create()->filterByIsVisible($this->user)->find()->getObjects());
 
         $datatable->setRows($rows);
-
 
         return $datatable;
     }
@@ -80,6 +84,7 @@ class ExamController extends Controller
         ]);
 
         if ($data === false) {
+            SweetAlert::createError('Alle velden zijn verplicht.');
             return $request->back();
         }
 
@@ -97,9 +102,12 @@ class ExamController extends Controller
         $exam
             ->setName($data['name'])
             ->setDescription($data['description'])
+            ->setTeacherId($this->user->getId())
             ->setDate($data['date'])
             ->syncClassIds($data['class_ids'])
             ->save();
+
+        SweetAlert::createSuccess('Examen is opgeslagen.');
 
         return new RedirectResponse(route('/exams'));
     }
@@ -152,5 +160,23 @@ class ExamController extends Controller
         $data['exam'] = $exam->export(true);
 
         return new MustacheResponse('Exams/show', $data, 'Tentamen');
+    }
+
+    public function delete(Request $request, array $params)
+    {
+        $exam = ExamQuery::create()->findPK($params['exam']);
+        if (!$exam instanceof Exam) {
+            return new MustacheResponse('404', [], '404');
+        }
+
+        if ($exam->hasRights()) {
+            SweetAlert::createSuccess('Examen is verwijderd.');
+
+            $exam->delete();
+        } else {
+            SweetAlert::createError('Examen kon niet verwijderd worden. Geen rechten.');
+        }
+
+        return new RedirectResponse('/exams');
     }
 }
