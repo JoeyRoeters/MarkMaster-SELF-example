@@ -43,6 +43,13 @@ class Web extends AbstractRoutable
             )
             ->make(
                 Route::GET(
+                    path: '/exams/register/{exam}',
+                    targetClass: ExamController::class,
+                    targetMethod: 'registerForExam',
+                )
+            )
+            ->make(
+                Route::GET(
                     path: '/exams/{exam}/edit',
                     targetClass: ExamController::class,
                     targetMethod: 'indexNewOrEdit',

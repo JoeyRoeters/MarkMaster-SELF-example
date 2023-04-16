@@ -2,10 +2,12 @@
 
 namespace App\Domains\Exam\Controller;
 
+use App\Authenticator;
 use App\Domains\Class\Repository\StudentClass;
 use App\Domains\Class\Repository\StudentClassQuery;
 use App\Domains\Exam\Repository\Exam;
 use App\Domains\Exam\Repository\ExamQuery;
+use App\Domains\Exam\Repository\ExamUser;
 use App\Domains\Mark\Repository\Mark;
 use App\Domains\Mark\Repository\MarkQuery;
 use App\Domains\User\Repository\User;
@@ -185,6 +187,21 @@ class ExamController extends Controller
             route(
                 sprintf('/exams/%s/update-marks', $examId)
             )
+        );
+    }
+
+    public function registerForExam(Request $request, array $params): RedirectResponse
+    {
+        $user = Authenticator::user();
+        $examId = $params['exam'];
+
+        (new ExamUser())
+            ->setUserId($user->id)
+            ->setExamId($examId)
+            ->save();
+
+        return new RedirectResponse(
+            route('/exams/' . $examId)
         );
     }
 

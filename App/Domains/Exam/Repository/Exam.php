@@ -150,6 +150,7 @@ class Exam extends ActiveRecord
             $user = Authenticator::user();
             $data['has_rights'] = $this->hasRights();
             $data['can_register'] = $this->canRegister();
+            $data['user_registered'] = Authenticator::user()->hasRegisteredForExam($this);
 
             if ($data['has_rights']) {
                 $data['marks'] = [];

@@ -6,6 +6,10 @@ use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 
+/**
+ * @method self setExamId(int $id)
+ * @method self setUserId(int $id)
+ */
 class ExamUser extends ActiveRecord
 {
     protected string $table = 'exam_user';
