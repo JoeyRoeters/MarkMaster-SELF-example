@@ -1,6 +1,6 @@
-{% extends 'base' %}
+{% extends 'base_clean' %}
 
-{% block content %}
+{% block bodyContent %}
 <style>body { background-image: url('{{ asset("assets/media/auth/bg9.jpg") }}'); } [data-theme="dark"] body { background-image: url('assets/media/auth/bg4-dark.jpg'); }</style>
 
 <div class="d-flex flex-column flex-column-fluid flex-lg-row">
@@ -38,4 +38,4 @@
     </div>
     <!--end::Body-->
 </div>
-{% endblock content %}
+{% endblock bodyContent %}

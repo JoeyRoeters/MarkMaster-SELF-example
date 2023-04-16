@@ -20,7 +20,7 @@
 </head>
 <!--end::Head-->
 <!--begin::Body-->
-<body id="kt_body" {% if login %} class="app-blank app-blank bgi-size-cover bgi-position-center bgi-no-repeat" {% else %} data-kt-app-header-fixed-mobile="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" class="app-default"  {% endif %}">
+<body id="kt_body" {% if $login == true %} class="app-blank app-blank bgi-size-cover bgi-position-center bgi-no-repeat" {% else %} data-kt-app-header-fixed-mobile="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" class="app-default"  {% endif %}">
 <!--begin::Theme mode setup on page load-->
 <script>var defaultThemeMode = "light"; var themeMode; if ( document.documentElement ) { if ( document.documentElement.hasAttribute("data-theme-mode")) { themeMode = document.documentElement.getAttribute("data-theme-mode"); } else { if ( localStorage.getItem("data-theme") !== null ) { themeMode = localStorage.getItem("data-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-theme", themeMode); }</script>
 <!--end::Theme mode setup on page load-->
