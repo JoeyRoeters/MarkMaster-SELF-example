@@ -113,7 +113,7 @@ class Authenticator
          */
         $record = $query
             ->filterBy($model->getTokenColumn(), Criteria::EQUALS, $this->session->get(self::AUTH_SESSION_KEY))
-            ->filterBy($model->getExpiresColumn(), Criteria::LESS_THAN, new DateTime())
+            ->filterBy($model->getExpiresColumn(), Criteria::GREATER_THAN, new DateTime())
             ->findOne();
 
         return $record;

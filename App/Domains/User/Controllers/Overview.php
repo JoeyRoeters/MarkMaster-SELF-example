@@ -27,13 +27,18 @@ class Overview
 //        $user->setEmail('tim@laptify.nl');
 //        $user->save();
 
-        /**
-         * @var User $user
-         */
-        $user = UserQuery::create()->findPk(1);
+//        /**
+//         * @var User $user
+//         */
+//        $user = UserQuery::create()->findPk(1);
+//
+//        sdd(Authenticator::user());
 
-//        Authenticator::login($user);
+        sdd('Dit werkt nu');
+    }
 
-        sdd(Authenticator::user());
+    public function roletest()
+    {
+        sdd('Role ding');
     }
 }

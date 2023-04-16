@@ -14,8 +14,4 @@ use SELF\src\Auth\AuthRecord;
  */
 class Auth extends AuthRecord
 {
-    public function getIdentifierColumn(): string
-    {
-        return 'user_id';
-    }
 }

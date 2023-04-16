@@ -7,7 +7,7 @@ use App\Domains\Auth\Repository\AuthQuery;
 use App\Domains\User\Repository\User;
 use App\Domains\User\Repository\UserQuery;
 use SELF\src\Auth\AuthRecord;
-use \SELF\src\Authenticator as BaseAuthenticator;
+use SELF\src\Authenticator as BaseAuthenticator;
 
 class Authenticator extends BaseAuthenticator
 {
