@@ -76,7 +76,7 @@ class ExamController extends Controller
         ]);
 
         if ($data === false) {
-            return new MustacheResponse('Exams/new_or_edit', $params + ['failed' => true]);
+            return $request->back();
         }
 
         if (isset($params['exam'])) {

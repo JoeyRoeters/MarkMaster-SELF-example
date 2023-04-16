@@ -21,8 +21,8 @@
             </label>
             <textarea
                 type="text"
-                id="name"
-                name="name"
+                id="description"
+                name="description"
                 class="form-control form-control-solid">{{ exam.description }}</textarea>
         </div>
 
@@ -33,8 +33,8 @@
             <input
                 value="{{ exam.date_sql }}"
                 type="date"
-                id="name"
-                name="name"
+                id="date"
+                name="date"
                 class="form-control form-control-solid" />
         </div>
 
@@ -42,7 +42,7 @@
             <label for="class_ids" class="required form-label">
                 Klassen
             </label>
-            <select name="class_ids" id="class_ids" multiple>
+            <select name="class_ids[]" id="class_ids" multiple>
                 {% foreach classes as class %}
                     <option value="{{ class.id }}">{{ class.name }}</option>
                 {% endforeach classes %}

@@ -6,6 +6,7 @@ use SELF\src\Helpers\Enums\MethodEnum;
 use SELF\src\Helpers\Enums\Validation\ValidateEnum;
 use SELF\src\Helpers\Interfaces\Message\RequestInterface;
 use SELF\src\Helpers\Interfaces\Message\UriInterface;
+use SELF\src\Http\Responses\RedirectResponse;
 use SELF\src\Validator;
 
 class Request extends Message implements RequestInterface
@@ -77,6 +78,11 @@ class Request extends Message implements RequestInterface
         }
 
         return $data;
+    }
+
+    public function back(): RedirectResponse
+    {
+        return new RedirectResponse($_SERVER['HTTP_REFERER']);
     }
 
     public function allParameters(): array
