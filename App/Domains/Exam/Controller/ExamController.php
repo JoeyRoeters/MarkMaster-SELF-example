@@ -41,7 +41,7 @@ class ExamController extends Controller
         $datatable->setHeaders($headers);
 
         $rows = array_map(function ($exam) {
-            return new DatatableRowDTO($exam->export(), []);
+            return new DatatableRowDTO($exam->export());
         }, ExamQuery::create()->filterByIsVisible($this->user)->find()->getObjects());
 
         $datatable->setRows($rows);

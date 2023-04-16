@@ -35,7 +35,7 @@ class ExamQuery extends AbstractQuery
 
         $ids = array_map(
             function ($class) {
-                return $class->getId();
+                return $class->getExamId();
             },
             ExamClassQuery::create()->filterByClassId($ids, Criteria::IN)->find()->getObjects()
         );

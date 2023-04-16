@@ -108,6 +108,7 @@ class Exam extends ActiveRecord
         if ($user->isAdmin()) {
             return true;
         }
+//        sdd($user->getId() === $this->getTeacherId());
         return $user->getId() === $this->getTeacherId();
     }
 
@@ -142,11 +143,7 @@ class Exam extends ActiveRecord
             }
 
             $user = Authenticator::user();
-            if ($user->isAdmin()) {
-                $data['has_rights'] = true;
-            } else {
-                $data['has_rights'] = $user->getId() === $this->getTeacherId();
-            }
+            $data['has_rights'] = $this->hasRights();
 
             if ($data['has_rights']) {
                 $data['marks'] = [];
