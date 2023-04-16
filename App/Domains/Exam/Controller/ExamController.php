@@ -43,6 +43,7 @@ class ExamController extends Controller
 
     public function indexNewOrEdit(Request $request, array $params): MustacheResponse
     {
+        $title = 'Examen maken';
         $viewParams = [
             'classes' => array_map(
                 fn (StudentClass $class) => [
@@ -54,19 +55,15 @@ class ExamController extends Controller
         ];
 
         if (isset($params['exam'])) {
-            $model = ExamQuery::create()->findPk($params['class']);
+            $title = 'Examen wijzigen';
+            $model = ExamQuery::create()->findPk($params['exam']);
 
             if ($model instanceof Exam) {
-                $viewParams['exam'] = [
-                    'name' => $model->name,
-                    'description' => $model->description,
-                    'date' => $model->date->format('Y-m-d'),
-                    'class_ids' => array_pluck('id', $model->classes())
-                ];
+                $viewParams['exam'] = $model->export(true);
             }
         }
 
-        return new MustacheResponse('Exams/new_or_edit', $viewParams);
+        return new MustacheResponse('Exams/new_or_edit', $viewParams, $title);
     }
 
     public function submitNewOrEdit(Request $request, array $params)

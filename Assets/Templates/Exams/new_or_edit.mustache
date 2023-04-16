@@ -8,7 +8,7 @@
                 Naam
             </label>
             <input
-                value="{{ exam.name  }}"
+                value="{{ exam.name }}"
                 type="text"
                 id="name"
                 name="name"
@@ -23,9 +23,7 @@
                 type="text"
                 id="name"
                 name="name"
-                class="form-control form-control-solid">
-                {{ exam.description }}
-            </textarea>
+                class="form-control form-control-solid">{{ exam.description }}</textarea>
         </div>
 
         <div class="mt-4">
@@ -33,7 +31,7 @@
                 Datum
             </label>
             <input
-                value="{{ exam.date  }}"
+                value="{{ exam.date_sql }}"
                 type="date"
                 id="name"
                 name="name"
@@ -47,7 +45,7 @@
             <select name="class_ids" id="class_ids" multiple>
                 {% foreach classes as class %}
                     <option value="{{ class.id }}">{{ class.name }}</option>
-                {% endforeach %}
+                {% endforeach classes %}
             </select>
         </div>
 

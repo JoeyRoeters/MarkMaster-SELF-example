@@ -92,6 +92,7 @@ class Exam extends ActiveRecord
             $data['description'] = $this->getDescription();
             if ($this->getDate() instanceof \DateTime) {
                 $data['date'] = $this->getDate()->format('d-m-Y H:i');
+                $data['date_sql'] = $this->getDate()->format('Y-m-d');
                 if ($this->getDate() < new \DateTime()) {
                     $data['status'] = ' Afgerond';
                     $data['status_class'] = 'success';
