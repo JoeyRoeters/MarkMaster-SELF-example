@@ -102,4 +102,16 @@ class ExamController extends Controller
 
         return new RedirectResponse(route('/exams'));
     }
+
+    public function show(Request $request, array $params)
+    {
+        $exam = ExamQuery::create()->findPK($params['id']);
+        if (!$exam instanceof Exam) {
+            return new MustacheResponse('404', [], '404');
+        }
+
+        $data['exam'] = $exam->export(true);
+
+        return new MustacheResponse('Exams/show', $data, 'Tentamen');
+    }
 }

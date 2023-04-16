@@ -84,7 +84,12 @@ enum ParseEnum: string
             $comparisonValue = $comparison[3];
             $result = $this->compare($value, $operator, $comparisonValue);
         } else {
-            $result = isset($data[$variable]) ? $data[$variable] : false;
+            $parts = preg_split('/\./', $variable);
+            if (count($parts) > 1) {
+                $result = isset($data[$parts[0]][$parts[1]]) ? $data[$parts[0]][$parts[1]] : false;
+            } else {
+                $result = isset($data[$variable]) ? $data[$variable] : false;
+            }
         }
 
 //        s_dump($ifTrue);

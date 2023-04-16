@@ -142,6 +142,7 @@ class User extends AuthenticatableRecord
             'is_admin' => $this->isAdmin(),
             'is_student' => $this->isStudent(),
             'is_teacher' => $this->isTeacher(),
+            'is_not_student' => $this->isAdmin() || $this->isTeacher(),
         ];
     }
 }
