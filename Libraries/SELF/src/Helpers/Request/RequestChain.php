@@ -15,9 +15,6 @@ class RequestChain
 
     private array $stages;
 
-    public function __construct(private readonly Container $container)
-    {}
-
     public function setRequest(Request $request): self
     {
         $this->request = $request;
@@ -55,9 +52,7 @@ class RequestChain
         /**
          * @var RequestChainableInterface $chainable
          */
-        $chainable = $this->container->resolve(
-            array_shift($chain)
-        );
+        $chainable = array_shift($chain);
 
         return $chainable->handle(
             $request,

@@ -26,7 +26,7 @@ class Router
     {
         $route = $this->matchRoute($request);
 
-        return (new RequestChain($this->container))
+        return (new RequestChain())
             ->setRequest($request)
             ->setStages($route->getMiddleware())
             ->setFinally(fn (Request $request) => $this->sendToController($request, $route))

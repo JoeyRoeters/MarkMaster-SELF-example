@@ -9,6 +9,8 @@ use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 
 class Role extends ActiveRecord
 {
+    protected string $table = 'roles';
+
     protected function tableColumns(): array
     {
         return [
@@ -19,6 +21,16 @@ class Role extends ActiveRecord
 
     public static function findOrCreate(RoleEnum $roleEnum): self
     {
+        $role = RoleQuery::create()
+            ->filterByName($roleEnum->value)
+            ->findOne();
 
+        if ($role === null) {
+            $role = new Role();
+            $role->set('name', $roleEnum->value);
+            $role->save();
+        }
+
+        return $role;
     }
 }

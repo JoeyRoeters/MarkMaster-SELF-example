@@ -9,25 +9,28 @@ use SELF\src\Http\Responses\Response;
 
 class Kernel
 {
-    /**
-     * @var Middleware[] $middleware
-     */
-    protected array $middleware = [];
-
     public function __construct(
         protected Application $app,
         protected Router $router,
     ) {
     }
 
-    public function handleRequest(Request $request)
+    /**
+     * @return Middleware[]
+     */
+    public function getMiddleware(): array
+    {
+        return [];
+    }
+
+    public function handleRequest(Request $request): void
     {
         if ($this->isAsset($request)) {
             $response = new AssetResponse($request->getUri()->getPath());
         } else {
-            $response = (new RequestChain($this->app))
+            $response = (new RequestChain())
                 ->setRequest($request)
-                ->setStages($this->middleware)
+                ->setStages($this->getMiddleware())
                 ->setFinally(fn (Request $request) => $this->sendRequestToRouter($request))
                 ->handleChain();
         }

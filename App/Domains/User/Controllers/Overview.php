@@ -15,9 +15,12 @@ class Overview
 
     public function index(Request $request, array $params)
     {
-        $data = ['name' => 'appel'];
-        $data['hobbies'] = ['gaming', 'coding', 'reading'];
-        return new MustacheResponse('test', $data);
+
+        sdd('Dit werkt!!');
+
+//        $data = ['name' => 'appel'];
+//        $data['hobbies'] = ['gaming', 'coding', 'reading'];
+//        return new MustacheResponse('test', $data);
     }
 
     public function test(Request $request)
