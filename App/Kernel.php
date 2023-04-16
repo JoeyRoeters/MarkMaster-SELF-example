@@ -7,7 +7,10 @@ use SELF\src\Http\Middleware\ExampleMiddleware;
 
 class Kernel extends BaseKernel
 {
-    protected array $middleware = [
-        ExampleMiddleware::class
-    ];
+    public function getMiddleware(): array
+    {
+        return [
+            new ExampleMiddleware(),
+        ];
+    }
 }

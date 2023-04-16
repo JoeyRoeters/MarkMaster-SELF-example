@@ -63,13 +63,11 @@ class Authenticator
     /**
      * Checks if current user is authenticated.
      *
-     * @param AuthenticatableRecord $authenticatable
      * @return bool
      */
-    public static function check(AuthenticatableRecord $authenticatable): bool
+    public static function check(): bool
     {
-        //todo implement
-        return false;
+        return self::getInstance()->getAuthRecordFromSession() !== null;
     }
 
     /**

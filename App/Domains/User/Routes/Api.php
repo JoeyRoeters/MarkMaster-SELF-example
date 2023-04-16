@@ -2,9 +2,12 @@
 
 namespace App\Domains\User\Routes;
 
+use App\Domains\Role\Repository\Role;
 use App\Domains\User\Controllers\Overview;
+use App\Enums\RoleEnum;
+use App\Middleware\RedirectUnauthenticatedMiddleware;
+use App\Middleware\UserHasRoleMiddleware;
 use SELF\src\Helpers\Route\AbstractRoutable;
-use SELF\src\Http\Middleware\ExampleMiddleware;
 use SELF\src\Http\Route;
 
 class Api extends AbstractRoutable {
@@ -19,7 +22,10 @@ class Api extends AbstractRoutable {
                     path: '/users/{user}',
                     targetClass: Overview::class,
                     targetMethod: 'index',
-                    middleware: [ExampleMiddleware::class]
+                    middleware: [
+                        new RedirectUnauthenticatedMiddleware('/login'),
+                        new UserHasRoleMiddleware(Role::findOrCreate(RoleEnum::USER)),
+                    ]
                 )
             );
     }

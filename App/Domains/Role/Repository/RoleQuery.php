@@ -8,7 +8,7 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
  * @method self filterById(int $id, Criteria $criteria = Criteria::EQUALS)
- * @method self
+ * @method self filterByName(string $name, Criteria $criteria = Criteria::EQUALS)
  */
 class RoleQuery extends AbstractQuery
 {

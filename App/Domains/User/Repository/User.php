@@ -1,10 +1,15 @@
 <?php
 namespace App\Domains\User\Repository;
 
+use App\Domains\Role\Repository\Role;
+use App\Domains\Role\Repository\RoleQuery;
+use App\Domains\Role\Repository\RoleUser;
+use App\Domains\Role\Repository\RoleUserQuery;
 use DateTime;
 use SELF\src\Auth\AuthenticatableRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
+use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
  * Class User
@@ -40,6 +45,50 @@ class User extends AuthenticatableRecord
             TableColumn::create('created_at', ColumnType::DATETIME)->autoTimestamp(),
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
         ];
+    }
+
+    /**
+     * @return Role[]
+     */
+    public function getRoles(): array
+    {
+        $roleUsers = RoleUserQuery::create()
+            ->filterByUserId($this->id)
+            ->find()
+            ->get();
+
+        if (empty($roleUsers)) {
+            return [];
+        }
+
+        $roleIds = array_map(
+            fn (RoleUser $roleUser) => $roleUser->role_id,
+            $roleUsers,
+        );
+
+        return RoleQuery::create()
+            ->filterById($roleIds, Criteria::IN)
+            ->find()
+            ->get();
+    }
+
+    public function hasRole(Role $role): bool
+    {
+        foreach ($this->getRoles() as $foundRoles) {
+            if ($role->id === $foundRoles->id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function appendRole(Role $role): void
+    {
+        (new RoleUser())
+            ->setRoleId($role->id)
+            ->setUserId($this->id)
+            ->save();
     }
 
     public function getIdentifier(): string

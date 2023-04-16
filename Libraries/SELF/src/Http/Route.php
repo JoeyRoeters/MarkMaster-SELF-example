@@ -5,6 +5,7 @@ namespace SELF\src\Http;
 use SELF\src\Exceptions\Route\RoutingMethodNotFoundException;
 use SELF\src\Helpers\Enums\MethodEnum;
 use SELF\src\Helpers\Request\Uri;
+use SELF\src\Http\Middleware\Middleware;
 
 /**
  * @method static self GET(string $path, string $targetClass, string $targetMethod, array $middleware = [])
@@ -59,6 +60,9 @@ class Route
         return $this->path;
     }
 
+    /**
+     * @return Middleware[]
+     */
     public function getMiddleware(): array
     {
         return $this->middleware;

@@ -6,8 +6,14 @@ use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
 use SELF\src\Helpers\Enums\HelixORM\ColumnType;
 
+/**
+ * @method self setRoleId(int $roleId)
+ * @method self setUserId(int $userId)
+ */
 class RoleUser extends ActiveRecord
 {
+    protected string $table = 'role_user';
+
     protected function tableColumns(): array
     {
         return [

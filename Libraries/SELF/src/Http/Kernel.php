@@ -8,22 +8,25 @@ use SELF\src\Http\Responses\Response;
 
 class Kernel
 {
-    /**
-     * @var Middleware[] $middleware
-     */
-    protected array $middleware = [];
-
     public function __construct(
         protected Application $app,
         protected Router $router,
     ) {
     }
 
-    public function handleRequest(Request $request)
+    /**
+     * @return Middleware[]
+     */
+    public function getMiddleware(): array
     {
-        $response = (new RequestChain($this->app))
+        return [];
+    }
+
+    public function handleRequest(Request $request): void
+    {
+        $response = (new RequestChain())
             ->setRequest($request)
-            ->setStages($this->middleware)
+            ->setStages($this->getMiddleware())
             ->setFinally(fn (Request $request) => $this->sendRequestToRouter($request))
             ->handleChain();
 
