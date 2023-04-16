@@ -42,6 +42,10 @@ class Response extends Message implements ResponseInterface
 
     public function output(): void
     {
+        foreach ($this->headers as $name => $values) {
+            header(sprintf('%s: %s', $name, $values), true);
+        }
+
         http_response_code($this->statusCode);
 
         echo $this->body;

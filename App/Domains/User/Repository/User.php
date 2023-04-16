@@ -100,4 +100,13 @@ class User extends AuthenticatableRecord
     {
         return $this->password;
     }
+
+    public function export(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+        ];
+    }
 }

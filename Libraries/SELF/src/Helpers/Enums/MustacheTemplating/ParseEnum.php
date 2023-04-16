@@ -28,6 +28,10 @@ enum ParseEnum: string
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $subKey => $subValue) {
+                    if (is_array($subValue)) {
+                        continue;
+                    }
+
                     $content = str_replace("{{ " . $key . "." . $subKey . " }}", $subValue, $content);
                 }
 
@@ -39,6 +43,10 @@ enum ParseEnum: string
 
         $content = preg_replace_callback('/{{\s*asset\s*\(\s*[\'"](.+?)[\'"]\s*\)\s*}}/', function($matches) {
             return PUBLIC_DIR . '/' . $matches[1];
+        }, $content);
+
+        $content = preg_replace_callback('/{{\s*route\s*\(\s*[\'"](.+?)[\'"]\s*\)\s*}}/', function($matches) {
+            return environment('APP_URL') . '/' . $matches[1];
         }, $content);
 
 
@@ -60,7 +68,12 @@ enum ParseEnum: string
             $issetValue = isset($data[$issetVariable]) ? $data[$issetVariable] : false;
             $result = isset($issetValue);
         } else if (preg_match('/^(.+?)\s*(==|!=|<|>|<=|>=)\s*(.+?)$/', $variable, $comparison)) {
-            $value = isset($data[$comparison[1]]) ? $data[$comparison[1]] : false;
+            $parts = preg_split('/\./', $comparison[1]);
+            if (count($parts) > 1) {
+                $value = isset($data[$parts[0]][$parts[1]]) ? $data[$parts[0]][$parts[1]] : false;
+            } else {
+                $value = isset($data[$comparison[1]]) ? $data[$comparison[1]] : false;
+            }
             $operator = $comparison[2];
             $comparisonValue = $comparison[3];
             $result = $this->compare($value, $operator, $comparisonValue);
@@ -68,9 +81,7 @@ enum ParseEnum: string
             $result = isset($data[$variable]) ? $data[$variable] : false;
         }
 
-
-
-        return $result ? $ifTrue : $ifFalse;
+        return $result === true ? $ifTrue : $ifFalse;
     }
 
     private function parseForEach(Mustache $mustache, array $matches, array &$data): string
@@ -79,6 +90,7 @@ enum ParseEnum: string
         $variable = $matches[2];
         $content = $matches[3];
         $output = '';
+
         if (isset($data[$array]) && is_array($data[$array])) {
             foreach ($data[$array] as $item) {
                 $itemContext = [$variable => $item];
@@ -154,6 +166,16 @@ enum ParseEnum: string
     private function compare($value, $operator, $comparisonValue)
     {
         $result = false;
+        if (is_numeric($value) && is_numeric($comparisonValue)) {
+            $value = (int) $value;
+            $comparisonValue = (int) $comparisonValue;
+        }
+
+        if (is_bool($value)) {
+            $value = (bool) $value;
+            $comparisonValue = (bool) $comparisonValue;
+        }
+
         switch ($operator) {
             case '==':
                 $result = $value == $comparisonValue;

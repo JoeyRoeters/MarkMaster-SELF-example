@@ -3,6 +3,7 @@
 namespace App\Domains\User\Routes;
 
 use App\Domains\Role\Repository\Role;
+use App\Domains\Role\Repository\RoleQuery;
 use App\Domains\User\Controllers\Overview;
 use App\Enums\RoleEnum;
 use App\Middleware\RedirectUnauthenticatedMiddleware;
@@ -24,7 +25,7 @@ class Api extends AbstractRoutable {
                     targetMethod: 'index',
                     middleware: [
                         new RedirectUnauthenticatedMiddleware('/login'),
-                        new UserHasRoleMiddleware(Role::findOrCreate(RoleEnum::USER)),
+                        new UserHasRoleMiddleware(RoleQuery::findOrCreate(RoleEnum::STUDENT)),
                     ]
                 )
             );

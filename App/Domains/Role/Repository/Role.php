@@ -18,19 +18,4 @@ class Role extends ActiveRecord
             TableColumn::create('name'),
         ];
     }
-
-    public static function findOrCreate(RoleEnum $roleEnum): self
-    {
-        $role = RoleQuery::create()
-            ->filterByName($roleEnum->value)
-            ->findOne();
-
-        if ($role === null) {
-            $role = new Role();
-            $role->set('name', $roleEnum->value);
-            $role->save();
-        }
-
-        return $role;
-    }
 }

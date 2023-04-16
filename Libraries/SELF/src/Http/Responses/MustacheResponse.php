@@ -10,9 +10,14 @@ class MustacheResponse extends Response
 
     public function __construct(
         private string $template,
-        private array $data = []
+        private array $data = [],
+        private ?string $title = null,
     )
     {
+        if ($this->title) {
+            $this->data['title'] = $this->title;
+        }
+
         $this->mustache = new Mustache($this->template, $this->data);
 
         parent::__construct();

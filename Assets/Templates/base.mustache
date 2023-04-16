@@ -1,8 +1,152 @@
 {% extends 'base_clean' %}
 
 {% block bodyContent %}
-dasdas dasdas
-    {% block content %}
+    <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
+        <!--begin::Header-->
+        <div id="kt_app_header" class="app-header" data-kt-sticky="true" data-kt-sticky-activate="{default: false, lg: true}" data-kt-sticky-name="app-header-sticky" data-kt-sticky-offset="{default: false, lg: '300px'}">
+            <!--begin::Header container-->
+            <div class="app-container container-fluid d-flex flex-stack" id="kt_app_header_container">
+                <!--begin::Sidebar toggle-->
+                <div class="d-flex align-items-center d-block d-lg-none ms-n3" title="Show sidebar menu">
+                    <div class="btn btn-icon btn-active-color-primary w-35px h-35px me-2" id="kt_app_sidebar_mobile_toggle">
+                        <!--begin::Svg Icon | path: icons/duotune/abstract/abs015.svg-->
+                        <span class="svg-icon svg-icon-2">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="currentColor"></path>
+                                            <path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="currentColor"></path>
+                                        </svg>
+                                    </span>
+                        <!--end::Svg Icon-->
+                    </div>
+                    <!--begin::Logo image-->
+                    <a href="../../demo27/dist/index.html">
+                        <img alt="Logo" src="assets/media/logos/default-small.svg" class="h-30px theme-light-show">
+                        <img alt="Logo" src="assets/media/logos/default-small-dark.svg" class="h-30px theme-dark-show">
+                    </a>
+                    <!--end::Logo image-->
+                </div>
+                <!--end::Sidebar toggle-->
+                {% if isset($title) %}
+                <!--begin::Header wrapper-->
+                <div class="d-flex flex-stack flex-lg-row-fluid" id="kt_app_header_wrapper">
+                    <!--begin::Page title-->
+                    <div class="page-title gap-4 me-3 mb-5 mb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="{default: 'prepend', lg: 'prepend'}" data-kt-swapper-parent="{default: '#kt_app_content_container', lg: '#kt_app_header_wrapper'}">
+                        <!--begin::Title-->
+                        <h1 class="text-gray-900 fw-bolder m-0">{{ title }}</h1>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Page title-->
 
-    {% endblock content %}
+                </div>
+                <!--end::Header wrapper-->
+                {% endif %}
+            </div>
+            <!--end::Header container-->
+        </div>
+        <!--end::Header-->
+        <!--begin::Wrapper-->
+        <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+            <!--begin::Sidebar-->
+            <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="250px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
+                <!--begin::Navs-->
+                <div class="app-sidebar-navs flex-column-fluid py-6" id="kt_app_sidebar_navs">
+                    <div id="kt_app_sidebar_navs_wrappers" class="hover-scroll-y my-2" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_header, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_navs" data-kt-scroll-offset="5px" style="height: 616px;">
+                        <!--begin::Quick links-->
+                        <div class="menu menu-rounded menu-column">
+                            {% foreach navigation_items as navigation_item %}
+                                {% if navigation_item.isSubMenu != true %}
+                                    <!--begin::Menu Item-->
+                                    <div class="menu-item">
+                                        <!--begin::Menu link-->
+                                        <a href="{{ navigation_item.url }}" class="menu-link">
+                                            <!--begin::Icon-->
+                                            <span class="menu-icon">
+                                                                <i class="{{ navigation_item.icon }}"></i>
+                                                            </span>
+                                            <!--end::Icon-->
+                                            <!--begin::Title-->
+                                            <span class="menu-title">{{ navigation_item.name }}</span>
+                                            <!--end::Title-->
+                                        </a>
+                                        <!--end:::Menu link-->
+                                    </div>
+                                    <!--end::Menu Item-->
+                                {% endif %}
+                            {% endforeach %}
+                        </div>
+                        <!--end::Quick links-->
+                    </div>
+                </div>
+                <!--end::Navs-->
+                <!--begin::Footer-->
+                <div class="app-sidebar-footer d-flex flex-stack px-11 pb-10" id="kt_app_sidebar_footer">
+                    <!--begin::User menu-->
+                    <div class="">
+                        <!--begin::Menu wrapper-->
+                        <div class="cursor-pointer symbol symbol-circle symbol-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-overflow="true" data-kt-menu-placement="top-start">
+                            <img width="25" height="25" src="{{ asset('assets/media/svg/avatars/blank.svg') }}"/>
+                        </div>
+                        <!--begin::User account menu-->
+                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
+                            <!--begin::Menu item-->
+                            <div class="menu-item px-3">
+                                <div class="menu-content d-flex align-items-center px-3">
+                                    <!--begin::Avatar-->
+                                    <div class="symbol symbol-50px me-5">
+                                        <img width="25" height="25" src="{{ asset('assets/media/svg/avatars/blank.svg') }}"/>
+                                    </div>
+                                    <!--end::Avatar-->
+                                    <!--begin::Username-->
+                                    <div class="d-flex flex-column">
+                                        <div class="fw-bold d-flex align-items-center fs-5">{{ user.name }}
+                                            <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span></div>
+                                        <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ user.email }}</a>
+                                    </div>
+                                    <!--end::Username-->
+                                </div>
+                            </div>
+                            <!--end::Menu item-->
+                            <!--begin::Menu separator-->
+                            <div class="separator my-2"></div>
+                            <!--end::Menu separator-->
+
+                            {% foreach navigation_items as navigation_item %}
+                                {% if navigation_item.isSubMenu == true %}
+                                    <!--begin::Menu Item-->
+                                    <div class="menu-item px-5 my-1">
+                                        <a href="{{ navigation_item.url }}" class="menu-link px-5">{{ navigation_item.name }}</a>
+                                    </div>
+                                    <!--end::Menu Item-->
+                                {% endif %}
+                            {% endforeach %}
+                        </div>
+                        <!--end::User account menu-->
+                        <!--end::Menu wrapper-->
+                    </div>
+                    <!--end::User menu-->
+                    <!--begin::Logout-->
+                    <a href="{{ route('auth/logout' }}" class="btn btn-sm btn-outline btn-flex btn-custom px-3">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr076.svg-->
+                        <span class="svg-icon svg-icon-3 me-2">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect opacity="0.3" width="12" height="2" rx="1" transform="matrix(-1 0 0 1 15.5 11)" fill="currentColor"></rect>
+                                        <path d="M13.6313 11.6927L11.8756 10.2297C11.4054 9.83785 11.3732 9.12683 11.806 8.69401C12.1957 8.3043 12.8216 8.28591 13.2336 8.65206L16.1592 11.2526C16.6067 11.6504 16.6067 12.3496 16.1592 12.7474L13.2336 15.3479C12.8216 15.7141 12.1957 15.6957 11.806 15.306C11.3732 14.8732 11.4054 14.1621 11.8756 13.7703L13.6313 12.3073C13.8232 12.1474 13.8232 11.8526 13.6313 11.6927Z" fill="currentColor"></path>
+                                        <path d="M8 5V6C8 6.55228 8.44772 7 9 7C9.55228 7 10 6.55228 10 6C10 5.44772 10.4477 5 11 5H18C18.5523 5 19 5.44772 19 6V18C19 18.5523 18.5523 19 18 19H11C10.4477 19 10 18.5523 10 18C10 17.4477 9.55228 17 9 17C8.44772 17 8 17.4477 8 18V19C8 20.1046 8.89543 21 10 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H10C8.89543 3 8 3.89543 8 5Z" fill="currentColor"></path>
+                                    </svg>
+                                </span>
+                        <!--end::Svg Icon-->Uitloggen</a>
+                    <!--end::Logout-->
+                </div>
+                <!--end::Footer-->
+            </div>
+            <!--end::Sidebar-->
+            <!--begin::Main-->
+
+            {% block content %}
+
+            {% endblock content %}
+            <!--end:::Main-->
+        </div>
+        <!--end::Wrapper-->
+    </div>
 {% endblock bodyContent %}

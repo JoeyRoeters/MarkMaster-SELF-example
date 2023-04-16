@@ -3,6 +3,7 @@
 namespace App\Domains\Role\Repository;
 
 use App\Domains\User\Repository\User;
+use App\Enums\RoleEnum;
 use SELF\src\HelixORM\Query\AbstractQuery;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
@@ -20,5 +21,20 @@ class RoleQuery extends AbstractQuery
     public function getUserRoles(User $user)
     {
 
+    }
+
+    public static function findOrCreate(RoleEnum $roleEnum): Role
+    {
+        $role = RoleQuery::create()
+            ->filterByName($roleEnum->value)
+            ->findOne();
+
+        if ($role === null) {
+            $role = new Role();
+            $role->set('name', $roleEnum->value);
+            $role->save();
+        }
+
+        return $role;
     }
 }
