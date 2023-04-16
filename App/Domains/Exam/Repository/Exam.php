@@ -4,6 +4,8 @@ namespace App\Domains\Exam\Repository;
 
 use App\Domains\Class\Repository\StudentClass;
 use App\Domains\Class\Repository\StudentClassQuery;
+use App\Authenticator;
+use App\Domains\Mark\Repository\MarkQuery;
 use SELF\src\HelixORM\HelixObjectCollection;
 use SELF\src\HelixORM\Record\ActiveRecord;
 use SELF\src\HelixORM\TableColumn;
@@ -14,17 +16,20 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
  * @property int $id
  * @property string $name
  * @property string $description
+ * @property int $teacher_id
  * @property \DateTime $date
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
  * @method int getId()
  * @method string getName()
  * @method string getDescription()
+ * @method int getTeacherId()
  * @method \DateTime getDate()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  * @method Exam setName(string $name)
  * @method Exam setDescription(string $description)
+ * @method Exam setTeacherId(int $teacherId)
  * @method Exam setDate(\DateTime $date)
  * @method Exam setCreatedAt(\DateTime $createdAt)
  * @method Exam setUpdatedAt(\DateTime $updatedAt)
@@ -39,6 +44,7 @@ class Exam extends ActiveRecord
             TableColumn::create('id', ColumnType::INT, null, false)->setPrimaryKey(true),
             TableColumn::create('name'),
             TableColumn::create('description'),
+            TableColumn::create('teacher_id', ColumnType::INT, null, false),
             TableColumn::create('date', ColumnType::DATETIME),
             TableColumn::create('created_at', ColumnType::DATETIME)->autoTimestamp(),
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
@@ -79,6 +85,11 @@ class Exam extends ActiveRecord
         return $this;
     }
 
+    public function getMarks(): HelixObjectCollection
+    {
+        return MarkQuery::create()->filterByExamId($this->getId())->find();
+    }
+
     public function export(bool $full = false): array
     {
         $data = [
@@ -101,6 +112,20 @@ class Exam extends ActiveRecord
                     $data['status_class'] = 'warning';
                 }
             }
+
+            $user = Authenticator::user();
+            if ($user->isAdmin()) {
+                $data['has_rights'] = true;
+            } else {
+                $data['has_rights'] = $user->getId() === $this->getTeacherId();
+            }
+
+            $data['marks'] = [];
+            foreach ($this->getMarks() as $mark) {
+                $data['marks'][] = $mark->export();
+            }
+
+//            sdd($data);
         }
 
         return $data;
