@@ -37,4 +37,12 @@ class Exam extends ActiveRecord
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
         ];
     }
+
+    public function export(): array
+    {
+        return [
+            'name' => '<a href="/exam/' . $this->getId() . '">' . $this->getName() . '</a>',
+            'date' => $this->getDate(),
+        ];
+    }
 }

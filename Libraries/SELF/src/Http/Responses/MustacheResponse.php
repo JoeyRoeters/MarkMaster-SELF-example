@@ -2,13 +2,15 @@
 
 namespace SELF\src\Http\Responses;
 
+use App\Domains\Navigation\Controllers\NavigationController;
 use SELF\src\Authenticator;
+use SELF\src\Helpers\Interfaces\Auth\AuthAppRecordInterface;
 use SELF\src\Helpers\Interfaces\Auth\AuthenticatableInterface;
 use SELF\src\MustacheTemplating\Mustache;
 
 class MustacheResponse extends Response
 {
-    private Mustache $mustache;
+    protected Mustache $mustache;
 
     public function __construct(
         private string $template,
@@ -21,8 +23,14 @@ class MustacheResponse extends Response
         }
 
         $authRecord = Authenticator::getInstance()->getAuthRecordFromSession();
-        if ($authRecord instanceof AuthenticatableInterface) {
-            $this->data['auth'] = $authRecord->export();
+        if ($authRecord instanceof AuthAppRecordInterface) {
+            $user = $authRecord->getUser();
+            if ($user instanceof AuthenticatableInterface) {
+                $this->data['auth'] = $user->export();
+            }
+
+            $navigation = new NavigationController();
+            $this->data['navigation_items'] = $navigation->getNavigation();
         }
 
         $this->mustache = new Mustache($this->template, $this->data);
