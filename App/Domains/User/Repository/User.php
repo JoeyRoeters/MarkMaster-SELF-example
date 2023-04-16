@@ -25,6 +25,7 @@ use SELF\src\Helpers\Enums\HelixORM\Criteria;
  * @property string $password
  * @property string $created_at
  * @property string $updated_at
+ * @method int getId()
  * @method string|null getName()
  * @method string|null getEmail()
  * @method string|null getPassword()
