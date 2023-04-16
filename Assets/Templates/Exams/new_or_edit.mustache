@@ -1,0 +1,56 @@
+{% extends 'base' %}
+
+{% block content %}
+<div class="m-8">
+    <form method="post">
+        <div>
+            <label for="name" class="required form-label">
+                Naam
+            </label>
+            <input
+                value="{{ exam.name  }}"
+                type="text"
+                id="name"
+                name="name"
+                class="form-control form-control-solid" />
+        </div>
+
+        <div class="mt-4">
+            <label for="description" class="required form-label">
+                Beschrijving
+            </label>
+            <textarea
+                type="text"
+                id="name"
+                name="name"
+                class="form-control form-control-solid">
+                {{ exam.description }}
+            </textarea>
+        </div>
+
+        <div class="mt-4">
+            <label for="date" class="required form-label">
+                Datum
+            </label>
+        </div>
+
+        <div class="mt-4">
+            <label for="classes" class="required form-label">
+                Klassen
+            </label>
+        </div>
+
+        <div class="d-flex align-items-center mt-4">
+            <button type="submit" class="btn btn-primary">
+                Opslaan
+            </button>
+
+            {% if failed %}
+                <div class="text-danger mx-4">
+                    Kon niet opslaan door een fout in de invoer.
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock content %}

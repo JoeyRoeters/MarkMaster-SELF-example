@@ -11,37 +11,42 @@ class Web extends AbstractRoutable
 {
     public function buildRoutes(): void
     {
-        $this->make(
-            Route::GET(
-                path: '/exams',
-                targetClass: ExamController::class,
-                targetMethod: 'index',
-                middleware: [new RedirectUnauthenticatedMiddleware('/login')]
+        $this
+            ->setBoundMiddleware([new RedirectUnauthenticatedMiddleware('/login')])
+            ->make(
+                Route::GET(
+                    path: '/exams',
+                    targetClass: ExamController::class,
+                    targetMethod: 'index',
+                )
             )
-        );
-        $this->make(
-            Route::GET(
-                path: '/exams/{id}',
-                targetClass: ExamController::class,
-                targetMethod: 'index',
-                middleware: [new RedirectUnauthenticatedMiddleware('/login')]
+            ->make(
+                Route::GET(
+                    path: '/exams/create',
+                    targetClass: ExamController::class,
+                    targetMethod: 'indexNewOrEdit'
+                )
             )
-        );
-        $this->make(
-            Route::GET(
-                path: '/exams',
-                targetClass: ExamController::class,
-                targetMethod: 'index',
-                middleware: [new RedirectUnauthenticatedMiddleware('/login')]
+            ->make(
+                Route::POST(
+                    path: '/exams/create',
+                    targetClass: ExamController::class,
+                    targetMethod: 'submitNewOrEdit',
+                )
             )
-        );
-        $this->make(
-            Route::GET(
-                path: '/exams',
-                targetClass: ExamController::class,
-                targetMethod: 'index',
-                middleware: [new RedirectUnauthenticatedMiddleware('/login')]
+            ->make(
+                Route::GET(
+                    path: '/exams/{exam}/edit',
+                    targetClass: ExamController::class,
+                    targetMethod: 'indexNewOrEdit',
+                )
             )
-        );
+            ->make(
+                Route::POST(
+                    path: '/exams/{exam}/edit',
+                    targetClass: ExamController::class,
+                    targetMethod: 'submitNewOrEdit',
+                )
+            );
     }
 }

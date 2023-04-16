@@ -9,6 +9,7 @@ use App\Responses\DatatableResponse;
 use App\Traits\UserTrait;
 use SELF\src\Http\Controller;
 use SELF\src\Http\Request;
+use SELF\src\Http\Responses\MustacheResponse;
 
 class ExamController extends Controller
 {
@@ -35,17 +36,12 @@ class ExamController extends Controller
         return $datatable;
     }
 
-    public function store(Request $request, array $params)
+    public function indexNewOrEdit(Request $request, array $params)
     {
-        var_dump($this->user);
+        return new MustacheResponse();
     }
 
-    public function show(Request $request, array $params)
-    {
-        var_dump($this->user);
-    }
-
-    public function delete(Request $request, array $params)
+    public function submitNewOrEdit(Request $request, array $params)
     {
         var_dump($this->user);
     }
