@@ -37,26 +37,19 @@ class NavigationController
                 icon: 'fas fa-marker'
             );
         }
-
-        if ($user->hasRole(RoleQuery::findOrCreate(RoleEnum::ADMIN))) {
-            $items[] = new NavigationDTO(
-                name: 'Gebruikers',
-                url: '/users',
-                icon: 'fas fa-users'
-            );
-            $items[] = new NavigationDTO(
-                name: 'Klassen',
-                url: '/groups',
-                icon: 'fas fa-user-group'
-            );
-        }
-
-        $items[] = new NavigationDTO(
-            name: 'Profiel',
-            url: '/profile',
-            icon: 'fas fa-user',
-            isSubMenu: true
-        );
+// for later
+//        if ($user->hasRole(RoleQuery::findOrCreate(RoleEnum::ADMIN))) {
+//            $items[] = new NavigationDTO(
+//                name: 'Gebruikers',
+//                url: '/users',
+//                icon: 'fas fa-users'
+//            );
+//            $items[] = new NavigationDTO(
+//                name: 'Klassen',
+//                url: '/groups',
+//                icon: 'fas fa-user-group'
+//            );
+//        }
 
         $items[] = new NavigationDTO(
             name: 'Uitloggen',

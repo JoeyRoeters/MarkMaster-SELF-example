@@ -102,6 +102,15 @@ class Exam extends ActiveRecord
         return MarkQuery::create()->filterByExamId($this->getId())->find();
     }
 
+    public function hasRights(): bool
+    {
+        $user = Authenticator::user();
+        if ($user->isAdmin()) {
+            return true;
+        }
+        return $user->getId() === $this->getTeacherId();
+    }
+
     public function export(bool $full = false): array
     {
         $data = [
@@ -113,14 +122,21 @@ class Exam extends ActiveRecord
             $data['id'] = $this->getId();
             $data['name'] = $this->getName();
             $data['description'] = $this->getDescription();
+            $data['mark_count'] = $this->getMarks()->count();
             if ($this->getDate() instanceof \DateTime) {
                 $data['date'] = $this->getDate()->format('d-m-Y H:i');
                 $data['date_sql'] = $this->getDate()->format('Y-m-d');
                 if ($this->getDate() < new \DateTime()) {
-                    $data['status'] = ' Afgerond';
-                    $data['status_class'] = 'success';
+                    if ($data['mark_count'] > 0) {
+                        $data['status'] = ' Afgerond';
+                        $data['status_class'] = 'success';
+                    } else {
+                        $data['status'] = ' Bezig met nakijken';
+                        $data['status_class'] = 'info';
+                    }
+
                 } else {
-                    $data['status'] = ' Nog te doen';
+                    $data['status'] = ' Nog te maken';
                     $data['status_class'] = 'warning';
                 }
             }
@@ -132,12 +148,19 @@ class Exam extends ActiveRecord
                 $data['has_rights'] = $user->getId() === $this->getTeacherId();
             }
 
-            $data['marks'] = [];
-            foreach ($this->getMarks() as $mark) {
-                $data['marks'][] = $mark->export();
+            if ($data['has_rights']) {
+                $data['marks'] = [];
+                foreach ($this->getMarks() as $mark) {
+                    $data['marks'][] = $mark->export();
+                }
             }
 
-//            sdd($data);
+            if ($user->isStudent()) {
+                $mark = MarkQuery::create()->filterByExamId($this->getId())->filterByStudentId($user->getId())->findOne();
+                if ($mark instanceof Mark) {
+                    $data['mark'] = $mark->getMark();
+                }
+            }
         }
 
         return $data;
