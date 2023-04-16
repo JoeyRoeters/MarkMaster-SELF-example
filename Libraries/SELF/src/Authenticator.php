@@ -83,6 +83,12 @@ class Authenticator
         $instance->createNewAuthSession($authRecord);
     }
 
+    public static function clear(): void
+    {
+        $instance = self::getInstance();
+        $instance->session->clear(self::AUTH_SESSION_KEY);
+    }
+
     protected function getAuthRecordFromAuthenticatable(AuthenticatableRecord $authenticatable): ?AuthRecord
     {
         $query = $this->authQuery;

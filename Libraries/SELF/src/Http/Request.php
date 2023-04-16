@@ -57,4 +57,9 @@ class Request extends Message implements RequestInterface
 
         return $new;
     }
+
+    public function getPost(): array
+    {
+        return $_POST;
+    }
 }

@@ -8,7 +8,9 @@
             <h1 class="text-dark fw-bolder mb-3">Log in</h1>
             <!--end::Title-->
             <!--begin::Subtitle-->
-
+            {% if loginFailed %}
+                <span>Kan niet inloggen met deze gegevens.</span>
+            {% endif %}
             <!--end::Subtitle=-->
         </div>
         <!--begin::Heading-->
@@ -47,9 +49,5 @@
             </button>
         </div>
         <!--end::Submit button-->
-        <!--begin::Sign up-->
-        <div class="text-gray-500 text-center fw-semibold fs-6">Nog geen account?
-            <a href="../../demo27/dist/authentication/layouts/creative/sign-up.html" class="link-primary">Contacteer administrator</a></div>
-        <!--end::Sign up-->
     </form>
 {% endblock login %}

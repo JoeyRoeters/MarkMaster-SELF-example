@@ -12,17 +12,16 @@ use SELF\src\Http\Responses\MustacheResponse;
 use SELF\src\Http\Responses\RedirectResponse;
 use SELF\src\Http\Responses\Response;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     public function index(): Response
     {
         return $this->getIndexResponse(['login' => true]);
     }
 
-    public function login(Request $request)
+    public function login(Request $request): Response
     {
         $attributes = $request->getPost();
-        $failedResponse = $this->getIndexResponse(['login' => false]);
 
         /**
          * @var User | null $user
@@ -32,12 +31,22 @@ class LoginController extends Controller
             ->findOne();
 
         if ($user === null || ! Hash::check($attributes['password'], $user->password)) {
-            return $failedResponse;
+            return $this->getIndexResponse(['loginFailed' =>  true]);
         }
 
         Authenticator::login($user);
 
-        return new RedirectResponse(environment('APP_URL'));
+        return new RedirectResponse(
+            environment('APP_URL')
+        );
+    }
+
+    public function logout(): RedirectResponse
+    {
+        Authenticator::clear();
+        return new RedirectResponse(
+            environment('APP_URL') . '/login'
+        );
     }
 
     private function getIndexResponse(array $attributes = []): MustacheResponse
