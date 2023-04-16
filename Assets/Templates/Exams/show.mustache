@@ -46,7 +46,11 @@
                                     <a href="#" class="btn delete-exam btn-sm btn-bg-danger-dark btn-active-color-danger me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_users_search">Verwijder tentamen</a>
                                 {% endif %}
 
-                                <a href="#" class="btn btn-sm btn-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_new_target">Wijzig examen</a>
+                                <a
+                                    href="/exams/{{ exam.id }}/edit"
+                                    class="btn btn-sm btn-primary me-3" >
+                                    Wijzig examen
+                                </a>
                             </div>
                             <!--end::Actions-->
                         </div>

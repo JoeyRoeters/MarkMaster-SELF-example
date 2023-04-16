@@ -14,8 +14,8 @@ class Web extends AbstractRoutable
         $this
             ->setBoundMiddleware([new RedirectUnauthenticatedMiddleware('/login')])
             ->make(
-                Route::POST(
-                    path: '/exams/{exam}/marks/{mark}/delete',
+                Route::DELETE(
+                    path: '/exams/{exam}/marks/{mark}',
                     targetClass: ExamController::class,
                     targetMethod: 'deleteMark',
                 )

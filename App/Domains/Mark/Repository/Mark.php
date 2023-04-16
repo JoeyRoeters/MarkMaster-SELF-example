@@ -55,7 +55,7 @@ class Mark extends ActiveRecord
             'exam_id' => $this->getExamId(),
             'student_id' => $this->getStudentId(),
             'student' => $this->getStudent()->getName(),
-            'mark' => $this->getMark(),
+            'mark' => $this->getMark() / 10,
         ];
     }
 }

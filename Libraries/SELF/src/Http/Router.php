@@ -56,7 +56,11 @@ class Router
             }
         }
 
-        throw new RouteNotFoundException();
+        throw new RouteNotFoundException(sprintf(
+            'Route %s with method %s can not be found.',
+            $request->getUri()->getPath(),
+            $request->getMethod()->value,
+        ));
     }
 
     private function registerRoutes(): void
