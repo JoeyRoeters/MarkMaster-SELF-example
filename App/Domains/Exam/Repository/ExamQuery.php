@@ -23,11 +23,22 @@ class ExamQuery extends AbstractQuery
 
     public function filterByIsVisible(User $user): self
     {
-        $ids =
-        $this->filterByClassId(
-            $user->getClasses()->getPrimaryKeys(),
-            Criteria::IN
+        if ($user->isAdmin() || $user->isTeacher()) {
+            return $this;
+        }
+
+        $ids = array_map(function ($class) {
+            return $class->getId();
+        }, $user->getClasses());
+
+        $ids = array_map(
+            function ($class) {
+                return $class->getId();
+            },
+            ExamClassQuery::create()->filterByClassId($ids, Criteria::IN)->find()->getObjects()
         );
+
+        $this->filterById($ids, Criteria::IN);
 
         return $this;
     }

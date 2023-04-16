@@ -2,8 +2,6 @@
 
 namespace SELF\src\MustacheTemplating;
 
-use App\Authenticator;
-use App\Domains\User\Repository\User;
 use SELF\src\Exceptions\MustacheTemplating\TemplateNotFoundException;
 use SELF\src\Helpers\Enums\MustacheTemplating\ParseEnum;
 use SELF\src\Helpers\Interfaces\Templating\TemplateEngineInterface;
@@ -25,13 +23,6 @@ class Mustache implements TemplateEngineInterface
             'base_url' => BASE_URL,
             'assets' => PUBLIC_DIR . '/assets'
         ]);
-
-        $user = Authenticator::user();
-        if ($user instanceof User) {
-            $this->appendData([
-                'user' => $user->export()
-            ]);
-        }
     }
 
 
@@ -104,7 +95,7 @@ class Mustache implements TemplateEngineInterface
         $this->content = ParseEnum::VARIABLE->parse($this, [], $data);
 
         // Parse foreach loops in the template
-        $this->content = preg_replace_callback('/\{%\s*foreach\s+(.+?)\s+as\s+(.+?)\s*%\}(.*?)\{%\s*endforeach\s*%\}/s', function($matches) use(&$data) {
+        $this->content = preg_replace_callback('/\{%\s*foreach\s+(\w+(?:\.\w+)*)\s+as\s+(\w+)\s*%\}(.*?)\{%\s*endforeach\s*\1\s*%\}/s', function($matches) use(&$data) {
             return ParseEnum::FOREACH->parse($this, $matches, $data);
         }, $this->content);
 

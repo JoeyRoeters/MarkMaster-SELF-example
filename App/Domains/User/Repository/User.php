@@ -2,6 +2,8 @@
 namespace App\Domains\User\Repository;
 
 use App\Domains\Class\Repository\StudentClassQuery;
+use App\Domains\Class\Repository\StudentClassToStudent;
+use App\Domains\Class\Repository\StudentClassToStudentQuery;
 use App\Domains\Role\Repository\Role;
 use App\Domains\Role\Repository\RoleQuery;
 use App\Domains\Role\Repository\RoleUser;
@@ -119,11 +121,16 @@ class User extends AuthenticatableRecord
         return $this->hasRole(RoleQuery::findOrCreate(RoleEnum::TEACHER));
     }
 
-    public function getClasses(): HelixObjectCollection
+    public function getClasses(): array
     {
-        return StudentClassQuery::create()
+        $classes = StudentClassToStudentQuery::create()
             ->filterByStudentId($this->id)
             ->find();
+
+        return array_map(
+            fn (StudentClassToStudent $class) => $class->getClass(),
+            $classes->getObjects(),
+        );
     }
 
     public function export(): array

@@ -72,7 +72,7 @@
                                     </div>
                                     <!--end::Menu Item-->
                                 {% endif %}
-                            {% endforeach %}
+                            {% endforeach navigation_items %}
                         </div>
                         <!--end::Quick links-->
                     </div>
@@ -98,9 +98,9 @@
                                     <!--end::Avatar-->
                                     <!--begin::Username-->
                                     <div class="d-flex flex-column">
-                                        <div class="fw-bold d-flex align-items-center fs-5">{{ user.name }}
+                                        <div class="fw-bold d-flex align-items-center fs-5">{{ auth.name }}
                                             <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span></div>
-                                        <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ user.email }}</a>
+                                        <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ auth.email }}</a>
                                     </div>
                                     <!--end::Username-->
                                 </div>
@@ -118,7 +118,7 @@
                                     </div>
                                     <!--end::Menu Item-->
                                 {% endif %}
-                            {% endforeach %}
+                            {% endforeach navigation_items %}
                         </div>
                         <!--end::User account menu-->
                         <!--end::Menu wrapper-->

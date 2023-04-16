@@ -11,7 +11,16 @@ use SELF\src\Helpers\Interfaces\Auth\AuthRecordInterface;
 /**
  * @property int $id
  * @property string $token
+ * @property int $identifier
  * @property DateTime $expires_at
+ * @method int getId()
+ * @method string getToken()
+ * @method int getIdentifier()
+ * @method DateTime getExpiresAt()
+ * @method $this setId(int $id)
+ * @method $this setToken(string $token)
+ * @method $this setIdentifier(int $identifier)
+ * @method $this setExpiresAt(DateTime $expires_at)
  */
 class AuthRecord extends ActiveRecord implements AuthRecordInterface
 {

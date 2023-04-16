@@ -32,10 +32,17 @@ enum ParseEnum: string
                         continue;
                     }
 
+                    if ($subValue instanceof \DateTime) {
+                        $subValue = $subValue->format('d-m-Y H:i');
+                    }
                     $content = str_replace("{{ " . $key . "." . $subKey . " }}", $subValue, $content);
                 }
 
                 continue;
+            }
+
+            if ($value instanceof \DateTime) {
+                $value = $value->format('d-m-Y H:i');
             }
 
             $content = str_replace("{{ " . $key . " }}", $value, $content);
@@ -91,12 +98,33 @@ enum ParseEnum: string
         $content = $matches[3];
         $output = '';
 
-        if (isset($data[$array]) && is_array($data[$array])) {
-            foreach ($data[$array] as $item) {
-                $itemContext = [$variable => $item];
-                $itemOutput = $mustache->renderTemplate($content, array_merge($data, $itemContext));
-                $output .= $itemOutput;
+        $dataArray = isset($data[$array]) && is_array($data[$array]) ? $data[$array] : [];
+
+        // check if multidimensional array
+        if (preg_match('/(.+)\.(.+)/', $array, $matches)) {
+            $array = $matches[1];
+            $subArray = $matches[2];
+
+            if (isset($data[$array][$subArray]) && is_array($data[$array][$subArray])) {
+                $dataArray = $data[$array][$subArray];
             }
+        }
+
+        $count = count($dataArray);
+        $start = 0;
+        $i = 0;
+        foreach ($dataArray as $key => $item) {
+            $itemContext = [
+                $variable => $item,
+                'loop' => [
+                    'index' => $i - $start,
+                    'iteration' => $i - $start + 1,
+                    'count' => $count
+                ]
+            ];
+            $itemOutput = $mustache->renderTemplate($content, array_merge($itemContext, $data));
+            $output .= $itemOutput;
+            $i++;
         }
 
         return $output;
@@ -152,9 +180,13 @@ enum ParseEnum: string
             $blockContent = $childBlockMatch[2];
 
             preg_match('/\{%\s*block\s+' . preg_quote($blockName, '/') . '\s*%\}(.*?)\{%\s*endblock\s*' . preg_quote($blockName, '/') . '\s*%\}/s', $baseTemplateContent, $baseBlockMatch);
-            $baseBlockContent = $baseBlockMatch[1] ?? '';
+            if (empty($baseBlockMatch)) {
+                $baseTemplateContent .= $childBlockMatch[0];
+            } else {
+                $baseBlockContent = $baseBlockMatch[1] ?? '';
 
-            $baseTemplateContent = str_replace($baseBlockMatch[0], $blockContent ?: $baseBlockContent,  $baseTemplateContent);
+                $baseTemplateContent = str_replace($baseBlockMatch[0], $blockContent ?: $baseBlockContent, $baseTemplateContent);
+            }
         }
 
         $output = $baseTemplateContent;

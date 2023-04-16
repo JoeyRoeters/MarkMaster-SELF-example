@@ -36,4 +36,9 @@ class StudentClassToStudent extends ActiveRecord
             TableColumn::create('updated_at', ColumnType::DATETIME)->autoTimestamp(),
         ];
     }
+
+    public function getClass(): ?StudentClass
+    {
+        return StudentClassQuery::create()->findPk($this->getStudentClassId());
+    }
 }
