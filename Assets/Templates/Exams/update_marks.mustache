@@ -1,0 +1,61 @@
+{% extends 'base' %}
+
+{% block content %}
+<div class="m-8">
+    <div>
+        {% foreach marks as mark %}
+            <div class="p-4 d-flex">
+                <span>{{ mark.student_name }}</span>
+                <span class="mx-4">{{ mark.mark }}</span>
+                <form
+                    method="delete"
+                    action="/exams/{{ exam.id }}/marks/{{ mark.id }}">
+                    <button class="btn btn-secondary">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        {% endforeach marks %}
+    </div>
+
+    <form method="post">
+        <div class="d-flex">
+            <div>
+                <label for="student_id" class="required form-label">
+                    Student
+                </label>
+                <select name="student_id" id="student_id" class="form-control form-control-solid">
+                    <option value="">Selecteer student...</option>
+                    {% foreach students as student %}
+                        <option value="{{ student.id }}">{{ student.name }}</option>
+                    {% endforeach students %}
+                </select>
+            </div>
+
+            <div>
+                <label for="mark" class="required form-label">
+                    Cijfer
+                </label>
+                <input
+                    type="number"
+                    name="mark"
+                    id="mark"
+                    class="form-control form-control-solid"
+                    placeholder="Voer cijfer in">
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center mt-4">
+            <button type="submit" class="btn btn-primary">
+                Opslaan
+            </button>
+
+            {% if failed %}
+                <div class="text-danger mx-4">
+                    Kon niet opslaan door een fout in de invoer.
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock content %}

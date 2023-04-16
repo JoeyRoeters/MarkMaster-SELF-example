@@ -5,6 +5,7 @@ namespace App\Domains\Exam\Repository;
 use App\Domains\Class\Repository\StudentClass;
 use App\Domains\Class\Repository\StudentClassQuery;
 use App\Authenticator;
+use App\Domains\Mark\Repository\Mark;
 use App\Domains\Mark\Repository\MarkQuery;
 use SELF\src\HelixORM\HelixObjectCollection;
 use SELF\src\HelixORM\Record\ActiveRecord;
@@ -83,6 +84,17 @@ class Exam extends ActiveRecord
         }
 
         return $this;
+    }
+
+    /**
+     * @return Mark[]
+     */
+    public function marks(): array
+    {
+        return MarkQuery::create()
+            ->filterByExamId($this->id)
+            ->find()
+            ->get();
     }
 
     public function getMarks(): HelixObjectCollection

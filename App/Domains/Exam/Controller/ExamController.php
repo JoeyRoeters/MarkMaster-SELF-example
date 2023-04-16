@@ -6,6 +6,10 @@ use App\Domains\Class\Repository\StudentClass;
 use App\Domains\Class\Repository\StudentClassQuery;
 use App\Domains\Exam\Repository\Exam;
 use App\Domains\Exam\Repository\ExamQuery;
+use App\Domains\Mark\Repository\Mark;
+use App\Domains\Mark\Repository\MarkQuery;
+use App\Domains\User\Repository\User;
+use App\Domains\User\Repository\UserQuery;
 use App\Helpers\Datatable\DTOs\DatatableHeaderDTO;
 use App\Helpers\Datatable\DTOs\DatatableRowDTO;
 use App\Responses\DatatableResponse;
@@ -98,6 +102,44 @@ class ExamController extends Controller
             ->save();
 
         return new RedirectResponse(route('/exams'));
+    }
+
+    public function indexUpdateMarks(Request $request, array $params): MustacheResponse
+    {
+        /** @var Exam | null $exam */
+        $exam = ExamQuery::create()->findPk($params['exam']);
+
+        if ($exam === null) {
+            return new MustacheResponse('404', [], '404');
+        }
+
+        return new MustacheResponse(
+            'Exams/update_marks',
+            [
+                'exam' => $exam->export(true),
+                'marks' => array_map(
+                    fn (Mark $mark) => $mark->export(),
+                    $exam->marks()
+                ),
+                'students' => array_map(
+                    fn (User $student) => $student->export(),
+                    UserQuery::create()->find()->get()
+                ),
+            ],
+            'Cijfers toevoegen'
+        );
+    }
+
+    public function newOrEditMark(Request $request, array $params): RedirectResponse
+    {
+        $data = $request->validate([
+            'mark' => ValidateEnum::NOT_EMPTY,
+            'student_id' => ValidateEnum::NOT_EMPTY,
+        ]);
+
+        $examId = $params['exam'];
+
+        return $request->back();
     }
 
     public function show(Request $request, array $params)
