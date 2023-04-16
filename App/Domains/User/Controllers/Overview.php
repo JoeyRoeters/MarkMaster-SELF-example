@@ -5,28 +5,19 @@ use App\Authenticator;
 use App\Domains\User\Repository\User;
 use App\Domains\User\Repository\UserQuery;
 use SELF\src\Http\Request;
-use SELF\src\Session;
+use SELF\src\Http\Responses\MustacheResponse;
 
 class Overview
 {
     public function __construct()
     {
-//        $user = UserQuery::create()->findPk(1);
-//        $user->setName('test');
-//        $user->save();
-//
-//        s_dump($user);
-//
-//
-//        s_dump($user);
-//
-//        $user->delete();
-//        s_dump($user);
     }
 
     public function index(Request $request, array $params)
     {
-        var_dump($params['user'] . ' inline parameter!');
+        $data = ['name' => 'appel'];
+        $data['hobbies'] = ['gaming', 'coding', 'reading'];
+        return new MustacheResponse('test', $data);
     }
 
     public function test(Request $request)

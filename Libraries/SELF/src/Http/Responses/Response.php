@@ -1,12 +1,13 @@
 <?php
-namespace SELF\src\Http;
+namespace SELF\src\Http\Responses;
 use SELF\src\Helpers\Interfaces\Message\ResponseInterface;
+use SELF\src\Http\Message;
 
 class Response extends Message implements ResponseInterface
 {
-    protected $statusCode = 200;
-    protected $reasonPhrase = '';
-    protected $body;
+    protected int $statusCode = 200;
+    protected string $reasonPhrase = '';
+    protected string $body;
 
     public function getStatusCode(): int
     {
@@ -37,5 +38,12 @@ class Response extends Message implements ResponseInterface
         $new->body = $body;
 
         return $new;
+    }
+
+    public function output(): void
+    {
+        http_response_code($this->statusCode);
+
+        echo $this->body;
     }
 }

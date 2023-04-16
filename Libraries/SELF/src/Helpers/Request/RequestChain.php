@@ -5,6 +5,7 @@ use Closure;
 use SELF\src\Container;
 use SELF\src\Helpers\Interfaces\Chain\RequestChainableInterface;
 use SELF\src\Http\Request;
+use SELF\src\Http\Responses\Response;
 
 class RequestChain
 {
@@ -47,6 +48,7 @@ class RequestChain
     {
         if (empty($chain)) {
             $finally = $this->finally;
+
             return $finally($request);
         }
 
