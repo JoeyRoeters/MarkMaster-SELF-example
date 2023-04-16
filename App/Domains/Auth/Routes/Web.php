@@ -2,7 +2,7 @@
 
 namespace App\Domains\Auth\Routes;
 
-use App\Domains\Auth\Controllers\LoginController;
+use App\Domains\Auth\Controllers\AuthController;
 use App\Domains\Homepage\Controllers\HomepageController;
 use App\Middleware\RedirectUnauthenticatedMiddleware;
 use SELF\src\Helpers\Route\AbstractRoutable;
@@ -15,24 +15,23 @@ class Web extends AbstractRoutable
         $this
             ->make(
                 Route::GET(
-                    path: '/',
-                    targetClass: HomepageController::class,
-                    targetMethod: 'index',
-                    middleware: [new RedirectUnauthenticatedMiddleware('/login')]
-                )
-            )
-            ->make(
-                Route::GET(
                     path: '/login',
-                    targetClass: LoginController::class,
-                    targetMethod: 'index'
+                    targetClass: AuthController::class,
+                    targetMethod: 'index',
                 )
             )
             ->make(
                 Route::POST(
                     path: '/login',
-                    targetClass: LoginController::class,
-                    targetMethod: 'login'
+                    targetClass: AuthController::class,
+                    targetMethod: 'login',
+                )
+            )
+            ->make(
+                Route::GET(
+                    path: '/logout',
+                    targetClass: AuthController::class,
+                    targetMethod: 'logout',
                 )
             );
     }

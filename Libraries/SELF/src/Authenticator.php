@@ -31,7 +31,7 @@ class Authenticator
         $this->authQuery = $this->getAuthQuery();
     }
 
-    public static function getInstance(): static
+    public static function getInstance(): self
     {
         if (! isset(static::$instance)) {
             static::$instance = new static();
@@ -81,6 +81,12 @@ class Authenticator
         $instance = self::getInstance();
         $authRecord = $instance->createAuthRecord($authenticatable);
         $instance->createNewAuthSession($authRecord);
+    }
+
+    public static function clear(): void
+    {
+        $instance = self::getInstance();
+        $instance->session->clear(self::AUTH_SESSION_KEY);
     }
 
     protected function getAuthRecordFromAuthenticatable(AuthenticatableRecord $authenticatable): ?AuthRecord
