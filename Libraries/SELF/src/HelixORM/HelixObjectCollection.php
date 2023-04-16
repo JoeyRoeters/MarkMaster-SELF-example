@@ -106,4 +106,9 @@ class HelixObjectCollection implements Iterator
     {
         return $this->objects[0] ?? null;
     }
+
+    public function getObjects(): array
+    {
+        return $this->objects;
+    }
 }

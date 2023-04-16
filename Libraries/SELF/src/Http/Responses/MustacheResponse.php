@@ -2,6 +2,8 @@
 
 namespace SELF\src\Http\Responses;
 
+use SELF\src\Authenticator;
+use SELF\src\Helpers\Interfaces\Auth\AuthenticatableInterface;
 use SELF\src\MustacheTemplating\Mustache;
 
 class MustacheResponse extends Response
@@ -16,6 +18,11 @@ class MustacheResponse extends Response
     {
         if ($this->title) {
             $this->data['title'] = $this->title;
+        }
+
+        $authRecord = Authenticator::getInstance()->getAuthRecordFromSession();
+        if ($authRecord instanceof AuthenticatableInterface) {
+            $this->data['auth'] = $authRecord->export();
         }
 
         $this->mustache = new Mustache($this->template, $this->data);

@@ -17,4 +17,9 @@ interface AuthenticatableInterface
      * @return string
      */
     public function getHashedPassword(): string;
+
+    /**
+     * @return array
+     */
+    public function export(): array;
 }

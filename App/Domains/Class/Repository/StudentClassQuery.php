@@ -1,34 +1,35 @@
 <?php
 
-namespace App\Domains\Exam\Repository;
+namespace App\Domains\Class\Repository;
 
 use App\Domains\User\Repository\User;
+use SELF\src\HelixORM\HelixObjectCollection;
 use SELF\src\HelixORM\Query\AbstractQuery;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
  * @method self filterById(int $id, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByName(string $name, Criteria $criteria = Criteria::EQUALS)
- * @method self filterByDate(\DateTime $date, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByCreatedAt(\DateTime $createdAt, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByUpdatedAt(\DateTime $updatedAt, Criteria $criteria = Criteria::EQUALS)
  */
-class ExamQuery extends AbstractQuery
+class StudentClassQuery extends AbstractQuery
 {
     public function getModel(): string
     {
-        return Exam::class;
+        return StudentClass::class;
     }
 
-
-    public function filterByIsVisible(User $user): self
+    public function getStudentClasses(User $user): HelixObjectCollection
     {
-        $ids =
-        $this->filterByClassId(
-            $user->getClasses()->getPrimaryKeys(),
-            Criteria::IN
-        );
+        $classIds = StudentClassToStudentQuery::create()
+            ->filterByStudentId($user->id)
+            ->find();
 
-        return $this;
+        $classIds = array_map(function ($class) {
+            return $class->class_id;
+        }, $classIds->getObjects());
+
+        return $this->filterById($classIds, Criteria::IN)->find();
     }
 }

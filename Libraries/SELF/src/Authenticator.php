@@ -107,7 +107,7 @@ class Authenticator
         return $record;
     }
 
-    protected function getAuthRecordFromSession(): ?AuthRecord
+    public function getAuthRecordFromSession(): ?AuthRecord
     {
         $query = $this->authQuery;
         $model = $this->authModel;
