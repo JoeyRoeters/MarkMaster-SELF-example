@@ -31,6 +31,10 @@ class FilterCriteria extends ColumnQueryCriteria implements BindableColumnInterf
             return '%' . $this->value . '%';
         }
 
+        if ($this->value instanceof \DateTime) {
+            return $this->value->format('Y-m-d H:i:s');
+        }
+
         return $this->value;
     }
 
