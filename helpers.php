@@ -2,15 +2,24 @@
 
 // define paths
 define('ROOT', __DIR__);
-define('APP', ROOT . '/App');
-define('LIB', ROOT . '/Libraries');
-define('PUBLIC', ROOT . '/Public');
-define('STORAGE', ROOT . '/storage');
-define('ASSETS', ROOT . '/assets');
+define('APP_DIR', ROOT . '/App');
+define('LIB_DIR', ROOT . '/Libraries');
+define('PUBLIC_DIR', ROOT . '/Public');
+define('STORAGE_DIR', ROOT . '/storage');
+define('ASSETS_DIR', ROOT . '/assets');
+define('BASE_URL', environment('APP_URL'));
 
-function environment(string $key): string
+function environment(string $key, mixed $fallback = null): string
 {
-    return SELF\src\Environment::getInstance()->get($key);
+    try {
+        return SELF\src\Environment::getInstance()->get($key);
+    } catch (\SELF\src\Exceptions\Environment\NotFoundException $e) {
+        if ($fallback === null) {
+            throw $e;
+        }
+
+        return $fallback;
+    }
 }
 
 function s_dump($var): void

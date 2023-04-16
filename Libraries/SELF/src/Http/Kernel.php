@@ -4,6 +4,7 @@ namespace SELF\src\Http;
 use SELF\src\Application;
 use SELF\src\Helpers\Request\RequestChain;
 use SELF\src\Http\Middleware\Middleware;
+use SELF\src\Http\Responses\AssetResponse;
 use SELF\src\Http\Responses\Response;
 
 class Kernel
@@ -21,11 +22,15 @@ class Kernel
 
     public function handleRequest(Request $request)
     {
-        $response = (new RequestChain($this->app))
-            ->setRequest($request)
-            ->setStages($this->middleware)
-            ->setFinally(fn (Request $request) => $this->sendRequestToRouter($request))
-            ->handleChain();
+        if ($this->isAsset($request)) {
+            $response = new AssetResponse($request->getUri()->getPath());
+        } else {
+            $response = (new RequestChain($this->app))
+                ->setRequest($request)
+                ->setStages($this->middleware)
+                ->setFinally(fn (Request $request) => $this->sendRequestToRouter($request))
+                ->handleChain();
+        }
 
         // handle responses
         if ($response instanceof Response) {
@@ -37,4 +42,11 @@ class Kernel
     {
         return $this->router->handleRoute($request);
     }
+
+
+    private function isAsset(Request $request): bool
+    {
+        return str_contains($request->getUri()->getPath(), 'Public/assets');
+    }
+
 }

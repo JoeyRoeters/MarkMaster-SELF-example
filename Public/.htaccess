@@ -1,0 +1,3 @@
+AddType text/css .css
+RewriteEngine On
+RewriteRule ^oldpage.html$ newpage.html [R=301,L]

@@ -8,12 +8,23 @@ use SELF\src\Helpers\Interfaces\Templating\TemplateEngineInterface;
 
 class Mustache implements TemplateEngineInterface
 {
+    private ?string $content = null;
+
+    /**
+     * @param string $templatePath
+     * @param array $data
+     */
     public function __construct(
         protected string $templatePath,
         protected array $data,
     )
     {
+        $this->appendData([
+            'base_url' => BASE_URL,
+            'assets' => PUBLIC_DIR . '/assets'
+        ]);
     }
+
 
     /**
      * @return array
@@ -33,61 +44,85 @@ class Mustache implements TemplateEngineInterface
         return $this;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function appendData(array $data): self
+    {
+        $this->data = array_merge($this->data, $data);
+
+        return $this;
+    }
+
+    /**
+     * get the contents of the template file
+     *
+     * @return string
+     * @throws TemplateNotFoundException
+     */
     public function getFileContents(): string
     {
-        $path = ASSETS . '/templates/' . $this->templatePath . '.mustache';
+        if ($this->content) {
+            return $this->content;
+        }
+
+        $path = ASSETS_DIR . '/templates/' . $this->templatePath . '.mustache';
         if (!file_exists($path)) {
             throw new TemplateNotFoundException('Template not found: ' . $path);
         }
 
-        return file_get_contents($path);
+        return $this->content = file_get_contents($path);
     }
 
+    /**
+     * Render the template
+     *
+     * @param string $content
+     * @param array $data
+     * @return string
+     */
     public function renderTemplate(string $content, array $data): string
     {
-        $output = $content;
+        $this->content = $content;
 
         // Check if template extends a base template
-        if (preg_match('/\{%\s*extends\s+(.+?)\s*%\}/s', $output, $matches)) {
-            $output = ParseEnum::EXTENDS->parse($this, $matches, $data);
+        while (preg_match('/\{%\s*extends\s+(.+?)\s*%\}/s', $this->content, $matches)) {
+            $this->content = ParseEnum::EXTENDS->parse($this, $matches, $data);
         }
 
-        // Replace variables in the template with their values
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $subKey => $subValue) {
-                    $output = str_replace("{{ " . $key . "." . $subKey . " }}", $subValue, $output);
-                }
-
-                continue;
-            }
-
-            $output = str_replace("{{ " . $key . " }}", $value, $output);
-        }
+        $this->content = ParseEnum::VARIABLE->parse($this, [], $data);
 
         // Parse if/else conditions in the template
-        $output = preg_replace_callback('/\{%\s*if\s+(.+?)\s*%\}(.*?)\{%\s*(else\s*%\}(.*?)\{%\s*)?endif\s*%\}/s', function($matches) use(&$data) {
+        $this->content = preg_replace_callback('/\{%\s*if\s+(.+?)\s*%\}(.*?)\{%\s*(else\s*%\}(.*?)\{%\s*)?endif\s*%\}/s', function($matches) use(&$data) {
             return ParseEnum::IF->parse($this, $matches, $data);
-        }, $output);
+        }, $this->content);
 
         // Parse foreach loops in the template
-        $output = preg_replace_callback('/\{%\s*foreach\s+(.+?)\s+as\s+(.+?)\s*%\}(.*?)\{%\s*endforeach\s*%\}/s', function($matches) use(&$data) {
+        $this->content = preg_replace_callback('/\{%\s*foreach\s+(.+?)\s+as\s+(.+?)\s*%\}(.*?)\{%\s*endforeach\s*%\}/s', function($matches) use(&$data) {
             return ParseEnum::FOREACH->parse($this, $matches, $data);
-        }, $output);
+        }, $this->content);
 
         // Parse for loops in the template
-        $output = preg_replace_callback('/\{%\s*for\s+(\w+)\s+in\s+(\d+)\.\.(\d+)\s*%\}(.*?)\{%\s*endfor\s*%\}/s', function($matches) use($data) {
+        $this->content = preg_replace_callback('/\{%\s*for\s+(\w+)\s+in\s+(\d+)\.\.(\d+)\s*%\}(.*?)\{%\s*endfor\s*%\}/s', function($matches) use($data) {
             return ParseEnum::FOR->parse($this, $matches, $data);
-        }, $output);
+        }, $this->content);
 
         // Parse include statements in the template
-        $output = preg_replace_callback('/\{%\s*include\s+\'(.+?)\'\s*%\}/s', function($matches) use($data) {
+        $this->content = preg_replace_callback('/\{%\s*include\s+\'(.+?)\'\s*%\}/s', function($matches) use($data) {
             return ParseEnum::INCLUDE->parse($this, $matches, $data);
-        }, $output);
+        }, $this->content);
 
-        return $output;
+        return $this->content;
     }
 
+    /**
+     * Render the template class
+     *
+     * @return string
+     * @throws TemplateNotFoundException
+     */
     public function render(): string
     {
         $content = $this->getFileContents();

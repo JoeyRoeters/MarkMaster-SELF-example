@@ -11,12 +11,38 @@ enum ParseEnum: string
     case FOR = 'for';
     case INCLUDE = 'include';
     case EXTENDS = 'extends';
+    case VARIABLE = 'variable';
 
     public function parse(Mustache $mustache, array $matches, array &$data): string
     {
         $method = 'parse' . ucfirst($this->value);
 
         return $this->$method($mustache, $matches, $data);
+    }
+
+    private function parseVariable(Mustache $mustache, array $matches, array &$data): string
+    {
+        $content = $mustache->getFileContents();
+
+        // Replace variables in the template with their values
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $subKey => $subValue) {
+                    $content = str_replace("{{ " . $key . "." . $subKey . " }}", $subValue, $content);
+                }
+
+                continue;
+            }
+
+            $content = str_replace("{{ " . $key . " }}", $value, $content);
+        }
+
+        $content = preg_replace_callback('/{{\s*asset\s*\(\s*[\'"](.+?)[\'"]\s*\)\s*}}/', function($matches) {
+            return PUBLIC_DIR . '/' . $matches[1];
+        }, $content);
+
+
+        return $content;
     }
 
     private function parseIf(Mustache $mustache, array $matches, array &$data): string
@@ -28,11 +54,21 @@ enum ParseEnum: string
             $ifFalse = $matches[4];
         }
 
-        preg_match('/^(.+?)\s*(==|!=|<|>|<=|>=)\s*(.+?)$/', $variable, $comparison);
-        $value = isset($data[$comparison[1]]) ? $data[$comparison[1]] : false;
-        $operator = $comparison[2];
-        $comparisonValue = $comparison[3];
-        $result = $this->compare($value, $operator, $comparisonValue);
+        // Check for isset condition
+        if (preg_match('/isset\(([^)]+)\)/', $variable, $issetMatches)) {
+            $issetVariable = $issetMatches[1];
+            $issetValue = isset($data[$issetVariable]) ? $data[$issetVariable] : false;
+            $result = isset($issetValue);
+        } else if (preg_match('/^(.+?)\s*(==|!=|<|>|<=|>=)\s*(.+?)$/', $variable, $comparison)) {
+            $value = isset($data[$comparison[1]]) ? $data[$comparison[1]] : false;
+            $operator = $comparison[2];
+            $comparisonValue = $comparison[3];
+            $result = $this->compare($value, $operator, $comparisonValue);
+        } else {
+            $result = isset($data[$variable]) ? $data[$variable] : false;
+        }
+
+
 
         return $result ? $ifTrue : $ifFalse;
     }
@@ -98,20 +134,21 @@ enum ParseEnum: string
         $base = new Mustache($baseTemplateName, $data);
         $baseTemplateContent = $base->getFileContents();
 
-        preg_match_all('/\{%\s*block\s+(\w+)\s*%\}(.*?)\{%\s*endblock\s*%\}/s', $baseTemplateContent, $baseBlockMatches, PREG_SET_ORDER);
-        foreach ($baseBlockMatches as $baseBlockMatch) {
-            $blockName = $baseBlockMatch[1];
-            $blockContent = $baseBlockMatch[2];
+        preg_match_all('/\{%\s*block\s+(\w+)\s*%\}(.*?)\{%\s*endblock\s+\1\s*%\}/s', $mustache->getFileContents(), $childBlockMatches, PREG_SET_ORDER);
+        foreach ($childBlockMatches as $childBlockMatch) {
+            $blockName = $childBlockMatch[1];
+            $blockContent = $childBlockMatch[2];
 
-            preg_match('/\{%\s*block\s+' . preg_quote($blockName, '/') . '\s*%\}(.*?)\{%\s*endblock\s*%\}/s', $mustache->getFileContents(), $childBlockMatch);
-            $childBlockContent = $childBlockMatch[1] ?? '';
+            preg_match('/\{%\s*block\s+' . preg_quote($blockName, '/') . '\s*%\}(.*?)\{%\s*endblock\s*' . preg_quote($blockName, '/') . '\s*%\}/s', $baseTemplateContent, $baseBlockMatch);
+            $baseBlockContent = $baseBlockMatch[1] ?? '';
 
-            $baseTemplateContent = str_replace($baseBlockMatch[0], $childBlockContent ?: $blockContent,  $baseTemplateContent);
-
+            $baseTemplateContent = str_replace($baseBlockMatch[0], $blockContent ?: $baseBlockContent,  $baseTemplateContent);
         }
+
         $output = $baseTemplateContent;
 
-        return preg_replace('/\{%\s*extends\s+.+?\s*%\}/s', '', $output);
+        // replace extend $baseTemplateName
+        return preg_replace('/\{%\s*extends\s+\'?' . preg_quote($baseTemplateName, '/') . '\'?\s*%\}/', '', $output);
     }
 
     private function compare($value, $operator, $comparisonValue)

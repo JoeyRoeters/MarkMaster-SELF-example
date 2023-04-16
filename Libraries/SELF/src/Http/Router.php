@@ -61,7 +61,7 @@ class Router
 
     private function registerRoutes(): void
     {
-        $dirs = array_filter(glob(APP . '/Domains/*'), 'is_dir');
+        $dirs = array_filter(glob(APP_DIR . '/Domains/*'), 'is_dir');
 
         foreach ($dirs as $dir) {
             $routeDir = "$dir/Routes";
