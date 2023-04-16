@@ -13,7 +13,6 @@ class Authenticator extends BaseAuthenticator
 {
     public static function user(): ?User
     {
-//        return UserQuery::create()->findPk(16);
         $instance = self::getInstance();
 
         /**
