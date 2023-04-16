@@ -33,7 +33,7 @@ class NavigationController
         if ($user->hasRole(RoleQuery::findOrCreate(RoleEnum::STUDENT))) {
             $items[] = new NavigationDTO(
                 name: 'Cijfers',
-                url: '/exams',
+                url: '/marks',
                 icon: 'fas fa-marker'
             );
         }

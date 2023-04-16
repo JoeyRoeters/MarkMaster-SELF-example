@@ -4,6 +4,10 @@ namespace App\Domains\User\Repository;
 use App\Domains\Class\Repository\StudentClassQuery;
 use App\Domains\Class\Repository\StudentClassToStudent;
 use App\Domains\Class\Repository\StudentClassToStudentQuery;
+use App\Domains\Exam\Repository\Exam;
+use App\Domains\Exam\Repository\ExamQuery;
+use App\Domains\Exam\Repository\ExamUser;
+use App\Domains\Exam\Repository\ExamUserQuery;
 use App\Domains\Role\Repository\Role;
 use App\Domains\Role\Repository\RoleQuery;
 use App\Domains\Role\Repository\RoleUser;
@@ -132,6 +136,33 @@ class User extends AuthenticatableRecord
             fn (StudentClassToStudent $class) => $class->getClass(),
             $classes->getObjects(),
         );
+    }
+
+    /**
+     * @return Exam[]
+     */
+    public function getExams(): array
+    {
+        $examIds = array_pluck(
+            'id',
+            ExamUserQuery::create()
+                ->filterByUserId($this->id)
+                ->find()
+                ->get(),
+        );
+
+        return ExamQuery::create()
+            ->filterById(empty($examIds) ? [0] : $examIds, Criteria::IN)
+            ->find()
+            ->get();
+    }
+
+    public function hasRegisteredForExam(Exam $exam): bool
+    {
+        return ExamUserQuery::create()
+            ->filterByUserId($this->id)
+            ->filterByExamId($exam->id)
+            ->exists();
     }
 
     public function export(): array

@@ -2,6 +2,8 @@
 
 namespace App\Domains\Mark\Repository;
 
+use App\Domains\Exam\Repository\Exam;
+use App\Domains\Exam\Repository\ExamQuery;
 use App\Domains\User\Repository\User;
 use App\Domains\User\Repository\UserQuery;
 use SELF\src\HelixORM\Record\ActiveRecord;
@@ -46,6 +48,11 @@ class Mark extends ActiveRecord
     public function getStudent(): User
     {
         return UserQuery::create()->findPk($this->getStudentId());
+    }
+
+    public function getExam(): Exam
+    {
+        return ExamQuery::create()->findPk($this->getExamId());
     }
 
     public function export(): array

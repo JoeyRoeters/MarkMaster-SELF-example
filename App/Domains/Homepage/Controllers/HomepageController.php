@@ -34,16 +34,18 @@ class HomepageController
             }
         }
 
-        $marks = MarkQuery::create()->filterByStudentId($user->getId())->orderBy('created_at')->find();
-        $data['total']['marks'] = $marks->count();
-        $data['total']['marks_average'] = 0;
-        foreach ($marks as $mark) {
-            $data['total']['marks_average'] += $mark->getMark();
-            $data['last_mark'] = $mark->getMark();
-        }
+        if ($user->isStudent()) {
+            $marks = MarkQuery::create()->filterByStudentId($user->getId())->orderBy('created_at')->find();
+            $data['total']['marks'] = $marks->count();
+            $data['total']['marks_average'] = 0;
+            foreach ($marks as $mark) {
+                $data['total']['marks_average'] += $mark->getMark();
+                $data['last_mark'] = $mark->getMark();
+            }
 
-        if ($data['total']['marks'] > 0) {
-            $data['total']['marks_average'] = round($data['total']['marks_average'] / $data['total']['marks'], 1);
+            if ($data['total']['marks'] > 0) {
+                $data['total']['marks_average'] = round($data['total']['marks_average'] / $data['total']['marks'], 1);
+            }
         }
 
         return new MustacheResponse('Homepage/dashboard', $data, 'Overzicht');

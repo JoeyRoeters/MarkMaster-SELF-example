@@ -42,15 +42,27 @@
 
                             <!--begin::Actions-->
                             <div class="d-flex mb-4">
-                                {% if auth.is_not_student %}
-                                    <a href="#" class="btn delete-exam btn-sm btn-bg-danger-dark btn-active-color-danger me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_users_search">Verwijder tentamen</a>
+                                {% if exam.has_rights == true %}
+                                    <a href="#" class="btn delete-exam btn-sm btn-bg-danger-dark btn-active-color-danger mt-3" data-bs-toggle="modal" data-bs-target="#kt_modal_users_search">Verwijder tentamen</a>
+                                    <a
+                                        href="/exams/{{ exam.id }}/update-marks"
+                                        class="btn btn-sm btn-primary mt-3">
+                                        Voeg cijfers toe
+                                    </a>
+                                    <a
+                                        href="/exams/{{ exam.id }}/edit"
+                                        class="btn btn-sm btn-primary mt-3 mx-4">
+                                        Wijzig examen
+                                    </a>
                                 {% endif %}
 
-                                <a
-                                    href="/exams/{{ exam.id }}/edit"
-                                    class="btn btn-sm btn-primary me-3" >
-                                    Wijzig examen
-                                </a>
+                                {% if exam.can_register == true %}
+                                    <a
+                                        href="/exams/{{ exam.id }}/register"
+                                        class="btn btn-sm btn-primary mt-3 mx-4">
+                                        Inschrijven
+                                    </a>
+                                {% endif %}
                             </div>
                             <!--end::Actions-->
                         </div>

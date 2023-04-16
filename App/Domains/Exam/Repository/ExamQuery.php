@@ -7,7 +7,7 @@ use SELF\src\HelixORM\Query\AbstractQuery;
 use SELF\src\Helpers\Enums\HelixORM\Criteria;
 
 /**
- * @method self filterById(int $id, Criteria $criteria = Criteria::EQUALS)
+ * @method self filterById(int | int[] $id, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByName(string $name, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByDescription(string $description, Criteria $criteria = Criteria::EQUALS)
  * @method self filterByTeacherId(int $teacherId, Criteria $criteria = Criteria::EQUALS)
@@ -33,14 +33,19 @@ class ExamQuery extends AbstractQuery
             return $class->getId();
         }, $user->getClasses());
 
-        $ids = array_map(
-            function ($class) {
-                return $class->getId();
-            },
-            ExamClassQuery::create()->filterByClassId($ids, Criteria::IN)->find()->getObjects()
-        );
+        if (! empty($ids)) {
+            $ids = array_map(
+                function ($class) {
+                    return $class->getExamId();
+                },
+                ExamClassQuery::create()
+                    ->filterByClassId($ids, Criteria::IN)
+                    ->find()
+                    ->getObjects()
+            );
+        }
 
-        $this->filterById($ids, Criteria::IN);
+        $this->filterById((empty($ids)) ? [0] : $ids, Criteria::IN);
 
         return $this;
     }

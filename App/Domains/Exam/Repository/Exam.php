@@ -111,6 +111,12 @@ class Exam extends ActiveRecord
         return $user->getId() === $this->getTeacherId();
     }
 
+    public function canRegister(): bool
+    {
+        $user = Authenticator::user();
+        return $user->isStudent() && ! $user->hasRegisteredForExam($this);
+    }
+
     public function export(bool $full = false): array
     {
         $data = [
@@ -142,11 +148,8 @@ class Exam extends ActiveRecord
             }
 
             $user = Authenticator::user();
-            if ($user->isAdmin()) {
-                $data['has_rights'] = true;
-            } else {
-                $data['has_rights'] = $user->getId() === $this->getTeacherId();
-            }
+            $data['has_rights'] = $this->hasRights();
+            $data['can_register'] = $this->canRegister();
 
             if ($data['has_rights']) {
                 $data['marks'] = [];

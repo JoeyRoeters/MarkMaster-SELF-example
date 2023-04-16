@@ -41,8 +41,8 @@ class ExamController extends Controller
         $datatable->setHeaders($headers);
 
         $rows = array_map(function ($exam) {
-            return new DatatableRowDTO($exam->export(), []);
-        }, ExamQuery::create()->filterByIsVisible($this->user)->find()->getObjects());
+            return new DatatableRowDTO($exam->export());
+        }, ExamQuery::create()->find()->getObjects());
 
         $datatable->setRows($rows);
 
@@ -104,6 +104,10 @@ class ExamController extends Controller
             ->setDescription($data['description'])
             ->setTeacherId($this->user->getId())
             ->setDate($data['date'])
+            ->save();
+
+        // Needs to be this way in case it's a new model.
+        $exam
             ->syncClassIds($data['class_ids'])
             ->save();
 
