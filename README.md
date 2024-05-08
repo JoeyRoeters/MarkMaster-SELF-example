@@ -21,3 +21,10 @@ As a capstone project for Web Technology II, we were tasked with creating a PHP 
 ## Structure:
 
 The SELF framework is located is located in '/libraries/SELF/', the application MarkMaster is been build out in '/App/' with it's Assets in '/Assets/'.
+
+## License
+This project, including all of its source code and documentation, is protected under the Joey Roeters GitHub Project License Agreement. The license strictly prohibits downloading, cloning, forking, modifying, using, or distributing any part of this project. Viewing the content on GitHub for personal or educational purposes is permitted within the constraints of the license agreement.
+
+By accessing this repository, you agree to comply with all the terms and conditions outlined in the license. Any use of the project's content outside of the permissible viewing on GitHub is a violation of this agreement and may subject you to legal action.
+
+For full license details, see the LICENSE file in this repository.
