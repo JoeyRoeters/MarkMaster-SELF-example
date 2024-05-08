@@ -1,0 +1,33 @@
+Joey Roeters GitHub Project License Agreement
+
+Copyright (c) [Year], Joey Roeters
+All rights reserved.
+
+1. Definitions:
+   "The Software" refers to all files, source code, documentation, and other associated materials published by Joey Roeters in the GitHub repository.
+
+2. Grant of License:
+   This document grants you the following limited viewing rights only:
+
+   a. Viewing: You may view the software via the GitHub interface for personal or educational purposes only.
+
+3. Restrictions:
+   a. No Downloading: You are not permitted to download, clone, or fork the repository or any part of the software contained within.
+   b. No Usage: You are not permitted to execute, deploy, or use the software in any environment, personal, commercial, or otherwise.
+   c. No Modification: You are not permitted to modify, alter, adapt, or create derivative works from the software.
+   d. No Distribution: You may not distribute, sublicense, sell, or otherwise make available any part of the software to third parties.
+   e. No Reverse Engineering: You may not reverse engineer, decompile, or disassemble the software.
+
+4. Ownership:
+   The software and all rights, including all intellectual property rights therein, are owned by Joey Roeters and are protected by international copyright laws. This agreement does not convey to you an interest in or to the software, but only a limited right of viewing revocable in accordance with the terms of this agreement.
+
+5. Termination:
+   This license is effective until terminated by Joey Roeters. Joey Roeters may terminate this license at any time without notice. Upon termination, you must cease all viewing and interaction with the repository.
+
+6. Disclaimer of Warranty:
+   The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall Joey Roeters be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+7. Limitation of Liability:
+   In no event shall Joey Roeters be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+
+By viewing this repository, you acknowledge that you have read and understand this License Agreement and agree to be bound by its terms.
